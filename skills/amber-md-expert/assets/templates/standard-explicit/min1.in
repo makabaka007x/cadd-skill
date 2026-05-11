@@ -1,0 +1,16 @@
+min1: minimize ions and solvation(50)
+&cntrl
+  imin=1,                            !进行能量最小化
+  ntmin = 1                          !默认的，先进行NCYC 步的最速下降法，然后转为共轭梯度法 
+  maxcyc=10000,                      !最大步数
+  ncyc=1000,                         !进行最速下降法的步数
+  drms = 0.0001                      !收敛尺度(能量梯度),默认为1.0E-4 kcal/mole-A 与gmx的emtol也不太一样
+  cut=10.0,                          !截断距离，默认8埃
+  ntb=1,                             !设置周期性边界条件，0:无周期性边界条件，1:常体积，2:常压。1为默认
+  ntpr=500,                          !输出到mdout和mdinfo的频率，默认每50步一次
+  ntwx = 1000,                       !坐标输出到mdcrd 文件的频率,默认为0
+  ntr=1,                             !restrain指定的原子，restraintmask指定被约束的原子，restraint_wt指定力常数。默认ntr=0
+  restraintmask='(!(:WAT|:MG|:CAL|:Na+|:Cl-) & !@H=) | (@KA,MG) | (:568@O)',      !backbone atoms in residues 1-293 restrained
+  restraint_wt=50.0                  !force constant for restraint,单位 kcal/mole-A^2. gmx中默认的为1000 KJ/mol-nm^2.
+/
+

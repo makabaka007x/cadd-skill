@@ -1,0 +1,20 @@
+&cntrl
+   ntx = 5,                             
+   ntwx = 5000, ntwe = 0, ntwr = 500,    
+   ntpr = 5000,                 
+
+   ioutfm=0, ntxo=1,                     
+
+   imin = 0, nstlim = 125000, dt = 0.002, 
+
+   ntt = 3, gamma_ln=1., temp0 = 300.0,  
+   nscm = 1000, ig = -1, irest = 1,                 
+
+   ntc= 2, ntf = 2, cut = 1000,           
+
+   igb=8, gbsa=3, surften=0.007, ntb = 0,
+   saltcon=0.0, 
+
+   ntr=1, restraintmask="@CA,N,C,O",     
+   restraint_wt=0.1, 
+/

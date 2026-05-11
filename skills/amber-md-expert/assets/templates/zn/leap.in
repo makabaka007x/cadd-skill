@@ -1,0 +1,28 @@
+source leaprc.protein.ff14SB #蛋白质力场
+#source leaprc.gaff #小分子力场
+source leaprc.water.tip3p #水和离子力场
+source leaprc.DNA.OL15 #DNA力场
+addAtomTypes { { "ZN" "Zn" "sp3" } { "S2" "S" "sp3" } { "N1" "N" "sp3" } }
+
+loadamberprep ZAFF.prep #Load ZAFF prep file
+loadamberparams ZAFF.frcmod #Load ZAFF frcmod file
+#loadamberprep ligand.prepi #导入小分子文件
+#loadamberparams ligand.frcmod #小分子力场
+#lig = loadpdb ligand.pdb #小分子结构，经过pdb4amber
+#pro = loadpdb protein.pdb #蛋白质结构，经过pdb4amber
+mol = loadpdb complex.pdb
+#complex-amber = combine {pro lig} #组合
+#saveAmberParm complex-amber complex-dry.top complex-dry.crd #保存没有加水和离子的top和crd文件
+
+bond mol.358.ZN mol.236.SG #Bond zinc ion with SG atom of residue CY384
+bond mol.358.ZN mol.237.SG #Bond zinc ion with SG atom of residue CY385
+bond mol.358.ZN mol.244.SG #Bond zinc ion with SG atom of residue CY392
+bond mol.358.ZN mol.230.NE2 #Bond zinc ion with ND2 atom of residue HIE378
+solvateBox mol TIP3PBOX 10 #加盒子、加水
+addions mol Na+ 0 #加抗衡离子
+addions mol Cl- 0 #加抗衡离子，一般只需要其中某一个，都写上仅为保险使用
+
+saveAmberParm mol complex-amber.top complex-amber.crd #保存完整的体系top和crd文件
+savepdb mol complex-amber.pdb #保存体系结构
+
+quit

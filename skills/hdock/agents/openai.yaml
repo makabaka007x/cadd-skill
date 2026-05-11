@@ -1,0 +1,4 @@
+interface:
+  display_name: "HDOCK"
+  short_description: "Run HDOCK docking locally from this repo"
+  default_prompt: "Use $hdock to run or package a local HDOCK docking job from this repository."

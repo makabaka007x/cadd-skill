@@ -1,0 +1,19 @@
+equil: NPT 400 ps
+&cntrl
+ imin=0,                                  ! imin=0(default):run MD simulation
+ ntx=5,                                   ! ntx=1 (default):从文件中只读取坐标，不读取速度; 5:读取坐标和速度,并且只有irest=1，才使用速度信息.
+ irest=1,                                 ! irest=0(default):不使用速度信息; 1:使用读取进来的速度信息
+ nstlim=400000, dt=0.002,                 ! nstlim:MD步数，dt：步长(ps)
+ ntc=2, ntf=2,                            !指定SHAKE来约束键长, 2: bonds involving hydrogen are constrained。EM一般不约束键长(ntc=1,默认)。ntf一般与ntc相同
+ ntpr=1000, ntwx=1000,ntwr = 2000         !ntwr:写入restrt文件的频率
+ cut=10.0,                                !截断距离，默认8埃
+ ntb=2,                                   !设置周期性边界条件，0:无周期性边界条件，1:常体积，2:常压。1为默认
+ ntp=1, taup=1.0,                         !ntp=1压力耦合,isotropic position scaling; taup:Pressure relaxation time (in ps)
+ ntt=3, gamma_ln=1.0,                     !ntt=3:温度耦合使用Langevin dynamics, gamma_ln: collision frequency ,单位为ps-1
+ tempi = 300.0, temp0=300.0,              !tempi:初始温度,temp0:参考温度
+ ntr=1, restraintmask='(!(:WAT|:MG|:CAL|:Na+|:Cl-) & !@H=) | (@KA,MG) | (:568@O)',     !restrain指定的原子，restraintmask指定被约束的原子，restraint_wt指定力常数。默认ntr=0
+ restraint_wt=1.0,
+ iwrap=1,                                 !iwrap = 1,写入到restart and trajectory文件中的坐标 will be "wrapped" into a primary box. 默认为0
+ ioutfm=1                                 !(mdcrd, mdvel and inptraj)保存为二进制格式，NetCDF
+/
+  

@@ -1,0 +1,29 @@
+heating with backbone restraints
+&cntrl
+   ntx = 1,                            
+   ntwx = 5000,ntwr = 500, ntpr = 5000,
+
+   ntwe = 0,                  !ntwe步输出能量和温度，设为0就没有          
+   ioutfm=0, ntxo=1,     !二进制格式的nc和ascii格式的rst                
+   imin = 0,
+   nstlim = 500000, dt = 0.002, !dt：每步的时长，单位是ps
+   ntt = 3,gamma_ln=1.0,temp0 = 100.0,   !ntt=3，用Langevin thermostat
+   nscm = 1000,
+   ig = -1,         !随机数种子
+   ntc= 2, ntf = 2, !对H原子键振动的约束（shake算法）
+   cut = 1000,    !对原子之间非键作用力的限制，距离大于1000A就忽略这两原子间的作用力
+
+   igb=8,
+   gbsa=3, surften=0.007,
+   ntb = 0,
+   saltcon=0.0,
+   ntr=1,restraintmask="@CA,N,C,O",  restraint_wt=10.0, !ntr=1：将对指定原子进行约束
+   nmropt=1,    !1：读取下面的&wt区域参数                         
+&end
+&wt
+   TYPE="TEMP0", istep1=0, istep2=500000,
+   value1=100.0, value2=300.0,        !0步时，温度是100K，50000步(1ns)时温度是300K    
+&end
+&wt
+   TYPE="END",
+&end 

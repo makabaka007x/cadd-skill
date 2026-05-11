@@ -1,0 +1,9 @@
+parm __TOPOLOGY__
+trajin __TRAJECTORY__
+autoimage
+rms first @CA
+strip :WAT|(:Na+|:Cl-)
+trajout md-nW.xtc
+trajout md-first.pdb onlyframes 1-1
+trajout md-last.pdb onlyframes __LAST_FRAME__-__LAST_FRAME__
+run

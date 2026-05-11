@@ -1,0 +1,4 @@
+interface:
+  display_name: "GROMACS Workflow Packer"
+  short_description: "打包 GROMACS tREMD/REST2 v2 本地准备、续跑与超算提交流程"
+  default_prompt: "Use $gmx-workflow-packer to prepare a GROMACS tREMD or REST2 v2 run/precheck bundle for my cluster."

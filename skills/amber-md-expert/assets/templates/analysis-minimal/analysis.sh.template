@@ -1,0 +1,62 @@
+#!/bin/bash
+
+#SBATCH -J __JOB_NAME__
+#SBATCH --partition=cpu6348
+#SBATCH --qos=52cores
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=4
+#SBATCH -o %j.out
+#SBATCH -e %j.err
+
+set -euo pipefail
+
+ml load amber
+
+TOPOLOGY="__TOPOLOGY__"
+TRAJECTORY="__TRAJECTORY__"
+CPPTRAJ_TEMPLATE="cpptraj.in"
+CPPTRAJ_RENDERED="cpptraj.rendered.in"
+
+detect_last_frame() {
+  local raw
+  raw=$(cpptraj <<EOF 2>/dev/null
+parm ${TOPOLOGY}
+trajin ${TRAJECTORY}
+countframes
+run
+EOF
+)
+  printf '%s\n' "$raw" | python3 -c 'import re, sys
+text = sys.stdin.read()
+patterns = [
+    r"Frames:\s*(\d+)",
+    r"frames:\s*(\d+)",
+    r"Frame[s]?\s*=\s*(\d+)",
+    r"Total\s+frames:\s*(\d+)",
+]
+for pattern in patterns:
+    match = re.search(pattern, text, re.IGNORECASE)
+    if match:
+        print(match.group(1))
+        raise SystemExit(0)
+numbers = re.findall(r"\b\d+\b", text)
+if numbers:
+    print(numbers[-1])'
+}
+
+LAST_FRAME="${LAST_FRAME:-$(detect_last_frame)}"
+
+if [[ -z "${LAST_FRAME}" ]]; then
+  echo "Failed to detect the last frame automatically."
+  echo "Re-run with LAST_FRAME=<frame_index> sbatch analysis.sh"
+  exit 1
+fi
+
+sed \
+  -e "s#__TOPOLOGY__#${TOPOLOGY}#g" \
+  -e "s#__TRAJECTORY__#${TRAJECTORY}#g" \
+  -e "s#__LAST_FRAME__#${LAST_FRAME}#g" \
+  "${CPPTRAJ_TEMPLATE}" > "${CPPTRAJ_RENDERED}"
+
+cpptraj -i "${CPPTRAJ_RENDERED}"

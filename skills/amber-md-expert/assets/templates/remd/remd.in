@@ -1,0 +1,10 @@
+&cntrl
+  imin=0, nstlim=200000000, dt=0.002,
+  ntx=5, irest=0,
+  temp0=TEMP,
+  ntt=3, gamma_ln=2.0,
+  ntc=2, ntf=2, ntb=1,
+  ntpr=50000, ntwx=50000, ntwr=50000,
+  numexchg=1000,
+  ioutfm=1, iwrap=1,
+/

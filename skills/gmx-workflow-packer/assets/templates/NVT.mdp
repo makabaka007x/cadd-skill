@@ -1,0 +1,29 @@
+integrator              = md
+dt                      = 0.002
+nsteps                  = 5000
+
+cutoff-scheme           = Verlet
+ns_type                 = grid
+nstlist                 = 20
+rlist                   = 1.0
+rcoulomb                = 1.0
+rvdw                    = 1.0
+coulombtype             = PME
+pbc                     = xyz
+
+tcoupl                  = V-rescale
+tc-grps                 = System
+tau-t                   = 2.0
+ref-t                   = TEMP
+
+pcoupl                  = no
+
+gen-vel                 = no
+continuation            = yes
+
+constraints             = h-bonds
+constraint-algorithm    = lincs
+
+nstenergy               = 100
+nstlog                  = 100
+nstxout-compressed      = 100

@@ -1,0 +1,19 @@
+&cntrl
+   ntx = 5,         
+   irest=0                    
+   ntpr=50000, ntwx=20000,ntwr=20000,                 
+
+   ioutfm=0, ntxo=1,                     
+
+   imin = 0, nstlim = 250000000, dt = 0.002,
+
+   ntt = 3, gamma_ln=1.0, temp0 = 300.0,  
+   nscm = 1000, ig = -1,                  
+
+   ntc= 2, ntf = 2, cut = 1000,  
+   ntb = 0,                             ! 无周期性边界条件         
+
+   igb=8, gbsa=3, surften=0.007, ntb = 0,
+   saltcon=0.0, 
+
+/

@@ -1,0 +1,4 @@
+interface:
+  display_name: "RFdiffusion3"
+  short_description: "Install, validate, run RFD3, then continue through MPNN sequence design and RF3 review."
+  default_prompt: "Use RFdiffusion3 and Foundry to validate the local environment, prepare RFD3 inputs, run design jobs, generate MPNN post-processing configs, run ProteinMPNN/LigandMPNN, and prepare RF3 fold review commands."

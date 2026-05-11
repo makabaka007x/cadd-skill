@@ -1,0 +1,4 @@
+interface:
+  display_name: "Amber MD Expert"
+  short_description: "Prepare Amber runs for local setup and HPC packaging"
+  default_prompt: "Use $amber-md-expert to prepare a local Amber workflow and a cluster-ready run directory."

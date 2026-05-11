@@ -1,0 +1,37 @@
+# HADDOCK 运行参数模板
+# 复制此文件为 run.param 并根据需要修改
+
+# HADDOCK 安装目录
+HADDOCK_DIR=/path/to/haddock2.5
+
+# 复合物组分数量 (1-20)
+N_COMP=2
+
+# 受体蛋白 PDB 文件
+PDB_FILE1=./protein_A.pdb
+
+# 配体蛋白 PDB 文件
+PDB_FILE2=./protein_B.pdb
+
+# 如果使用结构集合，指定文件列表
+# PDB_LIST1=./receptor_ensemble.list
+# PDB_LIST2=./ligand_ensemble.list
+
+# 链标识
+PROT_SEGID_1=A
+PROT_SEGID_2=B
+
+# 运行编号
+RUN_NUMBER=1
+
+# 项目目录
+PROJECT_DIR=./
+
+# AIR 约束文件 (如果没有实验数据，可留空或创建空文件)
+AMBIG_TBL=./restraints/air.tbl
+
+# 其他可选参数
+# TENSOR_TBL=./rdc.tbl        # RDC 约束
+# PCS_TBL=./pcs.tbl            # PCS 约束
+# DANI_TBL=./dani.tbl          # DANI 约束
+# EM_FILE=./density.xplor      # Cryo-EM 密度图

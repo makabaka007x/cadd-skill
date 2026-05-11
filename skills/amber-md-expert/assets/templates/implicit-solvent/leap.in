@@ -1,0 +1,12 @@
+source leaprc.protein.ff14SBonlysc
+complex-amber = loadpdb complex.pdb
+set default PBradii mbondi3 
+saveAmberParm complex-amber complex-amber.top complex-amber.crd #保存完整的体系top和crd文件
+savepdb complex-amber complex-amber.pdb #保存体系结构
+
+#saveAmberParm pro pro.top pro.crd #保存蛋白质的top和crd文件
+#savepdb pro pro.pdb #保存蛋白质结构，一般没什么用
+#saveAmberParm lig lig.top lig.crd #保存配体的top和crd文件
+#savepdb lig lig.pdb #保存配体结构
+
+quit

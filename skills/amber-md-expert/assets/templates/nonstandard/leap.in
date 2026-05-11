@@ -1,0 +1,35 @@
+source leaprc.protein.ff14SB 
+source leaprc.gaff
+source leaprc.water.tip3p 
+
+set default PBRadii mbondi3
+
+loadamberprep mea.prepin 
+loadamberparams frcmod2.mea
+loadamberparams frcmod.mea
+
+loadamberprep nad.prepi
+loadamberparams nad.frcmod
+loadamberprep nad2.prepi
+loadamberparams nad2.frcmod
+loadamberprep nad3.prepi
+loadamberparams nad3.frcmod
+loadamberprep nad4.prepi
+loadamberparams nad4.frcmod
+
+nad = loadpdb nad.pdb
+nad2 = loadpdb nad2.pdb
+nad3 = loadpdb nad3.pdb
+nad4 = loadpdb nad4.pdb
+protein = loadpdb protein.pdb
+complex-amber = combine {protein nad nad2 nad3 nad4}
+
+
+solvateBox complex-amber TIP3PBOX 10 #加盒子、加水
+addions complex-amber Na+ 0 
+addions complex-amber Cl- 0 
+
+saveAmberParm complex-amber complex-amber.top complex-amber.crd 
+savepdb complex-amber complex-amber.pdb 
+
+quit

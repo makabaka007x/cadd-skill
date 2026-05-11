@@ -1,0 +1,99 @@
+project:
+  name: demo_gmx_sampling
+  system_class: standard_protein
+  output_dir: ./demo_gmx_sampling_bundle
+
+sampling:
+  mode: tremd
+  replex: 250
+  deffnm: 5MD
+
+inputs:
+  prepared:
+    em_gro: /absolute/path/to/1EM.gro
+    topol_top: /absolute/path/to/topol.top
+    include_files: []
+  protein_pdb: /absolute/path/to/protein.pdb
+  complex_pdb: /absolute/path/to/complex.pdb
+  box_distance_nm: 1.0
+  ion_concentration_molar: 0.15
+  neutralize: true
+
+ligand:
+  source: external_file
+  ligand_file: /absolute/path/to/ligand.sdf
+  ligand_name: LIG
+  ligand_charge: auto
+  parameterization: acpype_gaff
+
+forcefield:
+  protein: amber99sb-ildn
+  water: tip3p
+
+temperature_ladder:
+  tmin: 300.0
+  tmax: 330.0
+  target_acceptance: 0.25
+  protein_atoms: 1500
+  water_molecules: 10000
+  temperatures: [300.0, 304.0, 308.0, 312.0, 316.0, 320.0, 325.0, 330.0]
+
+rest2:
+  workflow_version: v2
+  topology_strategy: plumed_partial_tempering
+  exchange_backend: xpsz_gromacs_2025_1_no_hrex
+  reference_temperature: 300.0
+  tmin: 300.0
+  tmax: 500.0
+  n_replicas: 8
+  effective_temperatures: []
+  hot_region: protein
+  hot_atom_ids: []
+  hot_residue_names: []
+  solvent_residue_names: [SOL, WAT, HOH, TIP3, NA, CL, K, CA, MG, ZN]
+  plumed_dat: empty
+  require_hrex: true
+  hrex_available: false
+  nstlist_must_divide_replex: true
+
+cluster:
+  capabilities:
+    gromacs_version: 2025.1-spack
+    has_plumed: true
+    has_hrex: false
+    note: xpsz GROMACS 2025.1 module exposes -plumed but not -hrex.
+  gpu:
+    partition: gpu4090
+    qos: 4gpus
+    ntasks_per_node: 1
+    cpus_per_task: 4
+    module: gromacs/2025.1
+    gmx_exec: gmx_mpi
+  cpu:
+    partition: cpu8358
+    qos: 26cores
+    ntasks_per_node: auto
+    cpus_per_task: 1
+    max_total_tasks: 26
+    module: gromacs/2025.1
+    gmx_exec: gmx_mpi
+    mpi_launch: mpirun
+
+steps:
+  stage1:
+    pr_nsteps: 1000
+    nvt_nsteps: 5000
+    npt_nsteps: 5000
+  production:
+    md_nsteps: 500000
+    segment_steps: 50000000
+    total_segments: 10
+    checkpoint_interval_minutes: 15
+
+restart:
+  state_file: state.yaml
+  checkpoint_name: 5MD.cpt
+
+postprocess:
+  enabled: true
+  render_per_temperature_analysis: true

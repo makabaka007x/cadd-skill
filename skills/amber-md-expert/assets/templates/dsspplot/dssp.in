@@ -1,0 +1,7 @@
+parm complex-amber.top
+trajin md.trj
+autoimage
+rms first @CA
+reference complex-amber.pdb
+secstruct :1-241 out dssp-zein.gnu    
+run

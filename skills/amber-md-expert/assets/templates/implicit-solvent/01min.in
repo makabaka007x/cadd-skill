@@ -1,0 +1,13 @@
+energy minimization
+&cntrl
+  imin = 1,                        !1进行最小化，0不进行最小化
+  maxcyc=100,                 !最小化最多进行100次
+  ntx = 1,                          !从没有速度的rst文件中读入坐标
+  ntwr = 100, ntpr = 10,    !前者设置输出到rst的步数，后者设置输出到out的步数
+  ioutfm=0, ntxo=1,          !前者指出nc文件的格式二进制，netcdf，后者指定rst文件格式ascii
+  cut = 1000.0,                 !非键截断距离（单位埃）
+  ntb=0,                            !没有周期性边界（毕竟没有水嘛）
+  igb = 8,                          !指定这是一个隐式溶剂模型 GBneck2
+  gbsa=3, surften=0.007, !指定溶剂可及表面积和表面张力
+  saltcon = 0.0, !Set the concentration (M) of 1-1 mobile counterions in the solution
+&end
