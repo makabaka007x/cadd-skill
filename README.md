@@ -1,4 +1,4 @@
-# CADD Skill Collection
+# Auto CADD Skill Collection
 
 This repository collects reusable Codex/Claude-style skills for CADD/AIDD,
 molecular docking, molecular dynamics, virtual screening, and protein design
