@@ -10,15 +10,15 @@ English version: [README.md](README.md)
 
 当你知道要做什么，但不确定该调用哪个 skill 时，先看这张表。
 
-| 你想做什么 | 使用 | 可以这样问 Agent | 典型输出 |
-| --- | --- | --- | --- |
-| 准备或打包 Amber MD 体系 | `amber-md-expert` | `/amber-md-expert 帮我把这个体系打包成可上传超算运行的 Amber MD 目录` | Amber 运行目录、输入文件、提交脚本、分析和续跑说明。 |
-| 分析 Amber 轨迹或结合能 | `amber-md-expert` | `/amber-md-expert 帮我分析这条轨迹并汇总 RMSD、contacts 和 MM/GBSA` | 轨迹指标、表格、图片，以及证据边界清楚的分析报告。 |
-| 运行本地 HDOCK 对接 | `hdock` | `/hdock 帮我用这些 receptor 和 ligand PDB 文件跑对接` | `hdock.out`、复合物模型、复制后的输入、日志和运行摘要。 |
-| 创建或分析 HADDOCK 项目 | `haddock` | `/haddock 帮我用这些结构和约束创建一个 HADDOCK 项目` | HADDOCK 项目文件、约束文件、运行结果、cluster summary 和模型排名。 |
-| 用 GPU 筛选配体库 | `unidock-pro` | `/unidock-pro 帮我用这个 receptor 筛选这个 ligand library，并给 top hits 排名` | ligand index、UniDock-Pro 输出、排序 CSV，以及模式和搜索框假设说明。 |
-| 用 RFD3 做蛋白或 binder 设计 | `rfdiffusion3` | `/rfdiffusion3 帮我检查 chain 和残基编号后，为这个靶标设计 binder` | RFD3 设计结果、可选 MPNN/RF3 后处理配置和 QC 说明。 |
-| 排序或检查 AlphaFold3 预测结果 | `af-analysis` | `/af-analysis 帮我给这些 AF3 结果排名，并生成 PAE 和界面指标` | Markdown/CSV 排名、ipTM_d0/pDockQ/mpDockQ 指标、PAE 图和分析摘要。 |
+| 你想做什么 | 使用 | 上游方法/工具链接 | 可以这样问 Agent | 典型输出 |
+| --- | --- | --- | --- | --- |
+| 准备或打包 Amber MD 体系 | `amber-md-expert` | [Amber](https://ambermd.org/) / [Amber-MD GitHub](https://github.com/amber-md) | `/amber-md-expert 帮我把这个体系打包成可上传超算运行的 Amber MD 目录` | Amber 运行目录、输入文件、提交脚本、分析和续跑说明。 |
+| 分析 Amber 轨迹或结合能 | `amber-md-expert` | [AmberTools](https://ambermd.org/AmberTools.php) / [Amber-MD GitHub](https://github.com/amber-md) | `/amber-md-expert 帮我分析这条轨迹并汇总 RMSD、contacts 和 MM/GBSA` | 轨迹指标、表格、图片，以及证据边界清楚的分析报告。 |
+| 运行本地 HDOCK 对接 | `hdock` | [HDOCK official site](https://hdock.phys.hust.edu.cn/) | `/hdock 帮我用这些 receptor 和 ligand PDB 文件跑对接` | `hdock.out`、复合物模型、复制后的输入、日志和运行摘要。 |
+| 创建或分析 HADDOCK 项目 | `haddock` | [HADDOCK site](https://www.bonvinlab.org/software/haddock2.4/) / [haddocking GitHub](https://github.com/haddocking) | `/haddock 帮我用这些结构和约束创建一个 HADDOCK 项目` | HADDOCK 项目文件、约束文件、运行结果、cluster summary 和模型排名。 |
+| 用 GPU 筛选配体库 | `unidock-pro` | [Uni-Dock GitHub](https://github.com/dptech-corp/Uni-Dock) / [Uni-Dock2 GitHub](https://github.com/dptech-corp/Uni-Dock2) | `/unidock-pro 帮我用这个 receptor 筛选这个 ligand library，并给 top hits 排名` | ligand index、UniDock-Pro 输出、排序 CSV，以及模式和搜索框假设说明。 |
+| 用 RFD3 做蛋白或 binder 设计 | `rfdiffusion3` | [Foundry GitHub](https://github.com/RosettaCommons/foundry) / [RFD3 docs](https://rosettacommons.github.io/foundry/) | `/rfdiffusion3 帮我检查 chain 和残基编号后，为这个靶标设计 binder` | RFD3 设计结果、可选 MPNN/RF3 后处理配置和 QC 说明。 |
+| 排序或检查 AlphaFold3 预测结果 | `af-analysis` | [af_analysis GitHub](https://github.com/samuelmurail/af_analysis) / [docs](https://af-analysis.readthedocs.io/) | `/af-analysis 帮我给这些 AF3 结果排名，并生成 PAE 和界面指标` | Markdown/CSV 排名、ipTM_d0/pDockQ/mpDockQ 指标、PAE 图和分析摘要。 |
 
 ## 仓库结构
 
