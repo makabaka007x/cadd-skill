@@ -8,14 +8,17 @@ The repository is intended to be an agent skill manual and a portable skill bund
 
 ## Quick Skill Selector
 
-| Task | Recommended skill | Use it for |
-| --- | --- | --- |
-| Amber molecular dynamics | `amber-md-expert` | Amber/AmberTools system preparation, explicit or implicit solvent MD, restart handling, cpptraj analysis, MM/GBSA, and HPC-ready run bundles. |
-| Local HDOCK docking | `hdock` | Reproducible HDOCKlite protein-protein or protein-nucleic-acid docking cases, including optional site restraints and model export. |
-| HADDOCK 2.5 docking | `haddock` | Information-driven biomolecular docking projects, restraint handling, example runs, and result analysis. |
-| GPU virtual screening | `unidock-pro` | UniDock-Pro classical docking, ligand similarity search, hybrid docking, ligand indexing, batch execution, and result ranking. |
-| Protein design | `rfdiffusion3` | Foundry/RFdiffusion3 environment validation, checkpoint setup, smoke tests, and design workflows. |
-| AlphaFold3 result analysis | `af-analysis` | AlphaFold3 Server zip or local AF3 output analysis, ranking tables, ipTM_d0, pDockQ, mpDockQ, and PAE plots. |
+Use this table when you know the research action but are not sure which skill to invoke.
+
+| You want to... | Use | Ask the agent like this | Typical result |
+| --- | --- | --- | --- |
+| Prepare or package an Amber MD system | `amber-md-expert` | `/amber-md-expert package this system for HPC Amber MD` | Amber run directory with inputs, submit scripts, analysis, and resume notes. |
+| Analyze Amber trajectories or binding energetics | `amber-md-expert` | `/amber-md-expert analyze this trajectory and summarize RMSD, contacts, and MM/GBSA` | Trajectory metrics, tables, plots, and a bounded interpretation report. |
+| Run local HDOCK docking | `hdock` | `/hdock run docking for these receptor and ligand PDB files` | `hdock.out`, exported complex models, copied inputs, logs, and run summary. |
+| Build or analyze a HADDOCK project | `haddock` | `/haddock create a HADDOCK project with these structures and restraints` | HADDOCK project files, restraints, run outputs, cluster summaries, and ranked models. |
+| Screen a ligand library on GPU | `unidock-pro` | `/unidock-pro screen this ligand library against this receptor and rank the top hits` | Ligand index, UniDock-Pro outputs, ranked CSV, and mode/search-box assumptions. |
+| Design proteins or binders with RFD3 | `rfdiffusion3` | `/rfdiffusion3 design a binder for this target after checking chains and residues` | RFD3 design outputs, optional MPNN/RF3 post-processing configs, and QC notes. |
+| Rank or inspect AlphaFold3 predictions | `af-analysis` | `/af-analysis rank these AF3 results and generate PAE/interface metrics` | Markdown/CSV rankings, ipTM_d0/pDockQ/mpDockQ metrics, PAE plots, and summaries. |
 
 ## Repository Layout
 
