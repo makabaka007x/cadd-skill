@@ -110,6 +110,8 @@ python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py ~/.codex
 
 ## Skill 详细介绍
 
+下面的示例是面向 Agent 的交互式调用方式，适合 Codex、Claude 或其他支持 skill 的 Agent。它们不是 shell 命令。Agent 应读取对应 `SKILL.md`，内部选择合适的辅助脚本，并在完成后报告实际执行了什么。
+
 ### `amber-md-expert`
 
 **类别：** 分子动力学和 Amber 工作流打包。
@@ -122,11 +124,12 @@ python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py ~/.codex
 
 **常见流程：** 先判断任务入口是原始结构准备、已有 Amber 拓扑打包，还是仅做后处理；再选择力场和水模型；生成或整理运行目录；补充上传和续跑说明；最后验证运行脚本和时间尺度，确认后再交付。
 
-**示例验证命令：**
+**Agent 交互式示例：**
 
-```bash
-python3 skills/amber-md-expert/scripts/validate_amber_task.py /path/to/amber_run_dir
-```
+- `/amber-md-expert 帮我把这个 Amber 体系打包成可上传超算运行的目录`
+- `/amber-md-expert 帮我为这个蛋白-配体复合物准备显式溶剂 Amber 流程`
+- `/amber-md-expert 帮我分析这条轨迹，汇总 RMSD、RoG、contacts 和 MM/GBSA`
+- `/amber-md-expert 帮我检查这个 Amber restart 链能不能安全续跑`
 
 **主要输出：** 结构化运行目录、准备文件、MD 输入文件、提交脚本、分析脚本、restart/续跑说明，以及用于超算打包时的 `UPLOAD_AND_RUN.md` 类说明文件。
 
@@ -142,20 +145,14 @@ python3 skills/amber-md-expert/scripts/validate_amber_task.py /path/to/amber_run
 
 **常见输入：** 受体 PDB、配体 PDB、可选位点/约束文件、可选已有 `hdock.out`、输出目录，以及需要导出的模型数量。
 
-**常见流程：** 检查受体和配体输入；判断是完整运行 docking，还是只从已有 `.out` 导出模型；调用 wrapper 脚本；检查日志和 `run-summary.json`；报告生成的模型和原始打分结果。
+**常见流程：** 检查受体和配体输入；判断是完整运行 docking，还是只从已有 `.out` 导出模型；由 Agent 内部调用合适的 wrapper；检查日志和 `run-summary.json`；报告生成的模型和原始打分结果。
 
-**示例命令：**
+**Agent 交互式示例：**
 
-```bash
-python3 skills/hdock/scripts/run_hdock_case.py receptor.pdb ligand.pdb \
-  --output-dir runs/case1 \
-  --nmax 20
-
-python3 skills/hdock/scripts/run_hdock_case.py \
-  --hdock-out hdock.out \
-  --output-dir runs/from-out \
-  --nmax 20
-```
+- `/hdock 帮我用 receptor.pdb 和 ligand.pdb 跑对接，并导出 top 20 模型`
+- `/hdock 帮我用已有的 rsite.txt 和 lsite.txt 作为约束跑这个 docking case`
+- `/hdock 帮我从这个 hdock.out 生成复合物模型`
+- `/hdock 帮我把这个 HDOCK case 整理成输入、日志、分数和模型都清楚的结果目录`
 
 **主要输出：** `hdock.out`、`models.pdb`、复制后的输入文件、stdout/stderr 日志，以及 `run-summary.json`。
 
@@ -173,14 +170,12 @@ python3 skills/hdock/scripts/run_hdock_case.py \
 
 **常见流程：** 检查 HADDOCK 环境；创建或选择项目；准备约束和参数；运行对应示例或自定义项目；分析 cluster、score、可用时的 FCC/iRMSD，以及 top models。
 
-**示例命令模式：**
+**Agent 交互式示例：**
 
-```bash
-# 激活本地 HADDOCK 环境后
-haddock2.5
-```
-
-项目创建、参数修改、约束生成和结果分析应优先参考该 skill 的 helper 命令和 reference 文档。
+- `/haddock 帮我用这两个 PDB 创建一个蛋白-蛋白 HADDOCK 项目`
+- `/haddock 帮我根据这些 active/passive residues 准备 AIR 约束`
+- `/haddock 帮我运行 protein-DNA 示例并总结输出`
+- `/haddock 帮我分析这个 HADDOCK run 目录并给 cluster 排名`
 
 **主要输出：** HADDOCK 运行目录、参数文件、约束文件、cluster summary、score table，以及筛选出的 top models。
 
@@ -196,24 +191,14 @@ haddock2.5
 
 **常见输入：** docking/hybrid 模式需要 receptor PDBQT；similarity/hybrid 模式需要 reference ligand；还需要 ligand directory 或 ligand index、搜索框中心和尺寸、显式 search mode，以及输出目录。
 
-**常见流程：** 判断任务属于 docking、similarity 还是 hybrid；如果只有配体目录，先建立 ligand index；确认搜索框和 `search_mode`；运行 wrapper 脚本；把 `*_out.pdbqt` 汇总成排序 CSV。
+**常见流程：** 判断任务属于 docking、similarity 还是 hybrid；如果只有配体目录，先建立 ligand index；确认搜索框和 `search_mode`；由 Agent 内部运行 wrapper；把 `*_out.pdbqt` 汇总成排序 CSV。
 
-**示例命令：**
+**Agent 交互式示例：**
 
-```bash
-python3 skills/unidock-pro/scripts/make_ligand_index.py /path/to/ligands /path/to/ligand_index.txt
-
-python3 skills/unidock-pro/scripts/run_unidock_case.py \
-  --mode docking \
-  --receptor /path/to/receptor.pdbqt \
-  --ligand-index /path/to/ligand_index.txt \
-  --center-x 0 --center-y 0 --center-z 0 \
-  --size-x 20 --size-y 20 --size-z 20 \
-  --search-mode <fast|balance|detail> \
-  --output-dir /path/to/results
-
-python3 skills/unidock-pro/scripts/analyze_unidock_results.py /path/to/results /path/to/docking_results.csv --top-n 50
-```
+- `/unidock-pro 帮我用这个 receptor 和 ligand library 做 classical docking，并输出 top 50 排名`
+- `/unidock-pro 帮我给这个 ligand 目录建立 ligand index`
+- `/unidock-pro 帮我用这个 reference ligand 做相似性搜索`
+- `/unidock-pro 帮我用这个 receptor 和共晶 reference ligand 做 hybrid docking`
 
 **主要输出：** UniDock-Pro 输出 PDBQT、日志、排序 CSV，以及实际运行模式和关键假设说明。
 
@@ -231,16 +216,12 @@ python3 skills/unidock-pro/scripts/analyze_unidock_results.py /path/to/results /
 
 **常见流程：** 先检查真实环境；验证 Python、torch/CUDA、Foundry CLI 和 checkpoint；昂贵 GPU 任务前先跑小 demo 或 smoke test；基于结构检查结果准备设计输入；必要时先使用低显存首轮设置；用户需要时再做 MPNN/RF3/QC 后处理。
 
-**示例命令：**
+**Agent 交互式示例：**
 
-```bash
-python skills/rfdiffusion3/scripts/check_foundry_env.py \
-  --checkpoint-dir /path/to/foundry/checkpoints
-
-FOUNDRY_CHECKPOINT_DIRS=/path/to/foundry/checkpoints \
-rfd3 design out_dir=/path/to/out inputs=/path/to/input.json \
-  prevalidate_inputs=True diffusion_batch_size=1 n_batches=1 low_memory_mode=True
-```
+- `/rfdiffusion3 帮我检查这台机器能不能用现有 checkpoint 跑 RFdiffusion3`
+- `/rfdiffusion3 帮我准备一个 smoke test，并说明环境是否可用`
+- `/rfdiffusion3 帮我检查 chain ID 和残基编号后，为这个靶标设计 binder`
+- `/rfdiffusion3 帮我为这些 RFD3 design 准备 MPNN 和 RF3 后处理`
 
 **主要输出：** RFD3 设计结果、可选轨迹、设计 metadata、MPNN/RF3 后处理配置，以及 QC summary。
 
@@ -258,15 +239,12 @@ rfd3 design out_dir=/path/to/out inputs=/path/to/input.json \
 
 **常见流程：** 先对目录做快速 ranking；导出 Markdown 或 CSV；对重点样本做深度分析；检查 PAE 和界面指标；生物学解释必须受限于预测置信度。
 
-**示例命令：**
+**Agent 交互式示例：**
 
-```bash
-python skills/af-analysis/af3_ranking.py --input . --output af3_ranking --format both
-
-python skills/af-analysis/af3_deepanalyze.py \
-  --zip fold_example.zip \
-  --output example_af3_analysis/
-```
+- `/af-analysis 帮我给这个目录下所有 AlphaFold3 fold_*.zip 做排名`
+- `/af-analysis 帮我分析这个 AF3 结果，生成 PAE 图和界面指标`
+- `/af-analysis 帮我用 ipTM_d0、pDockQ、mpDockQ 和 PAE 比较这些 AF3 模型`
+- `/af-analysis 帮我把 ranking 表同时导出成 Markdown 和 CSV`
 
 **主要输出：** ranking table、CSV/Markdown summary、PAE heatmap、analysis summary，以及可选的 notebook 风格 3D 可视化支持。
 
