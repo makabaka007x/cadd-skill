@@ -110,6 +110,8 @@ If the validator is not installed, at minimum confirm that the target skill dire
 
 ## Detailed Skill Guide
 
+The examples below are agent-facing invocation prompts. They are meant for Codex, Claude, or another skill-aware agent, not for a shell. The agent should read the corresponding `SKILL.md`, choose the proper helper scripts internally, and report what it ran.
+
 ### `amber-md-expert`
 
 **Category:** Molecular dynamics and Amber workflow packaging.
@@ -122,11 +124,12 @@ If the validator is not installed, at minimum confirm that the target skill dire
 
 **Common workflow:** classify the task as raw structure preparation, existing Amber topology packaging, or analysis-only; choose force fields and water model; generate or assemble the run directory; add upload and resume instructions; validate run scripts and time scales before treating the bundle as ready.
 
-**Example validation command:**
+**Agent-style requests:**
 
-```bash
-python3 skills/amber-md-expert/scripts/validate_amber_task.py /path/to/amber_run_dir
-```
+- `/amber-md-expert package this Amber system into an HPC-ready run directory`
+- `/amber-md-expert prepare an explicit-solvent Amber workflow for this protein-ligand complex`
+- `/amber-md-expert analyze this trajectory with cpptraj and summarize RMSD, RoG, contacts, and MM/GBSA`
+- `/amber-md-expert check whether this Amber restart chain can be safely resumed`
 
 **Expected outputs:** a structured run directory, preparation files, MD input files, submit scripts, analysis scripts, restart/resume notes, and an `UPLOAD_AND_RUN.md` style instruction file when packaging for HPC.
 
@@ -142,20 +145,14 @@ python3 skills/amber-md-expert/scripts/validate_amber_task.py /path/to/amber_run
 
 **Typical inputs:** receptor PDB, ligand PDB, optional site/restraint files, optional existing `hdock.out`, output directory, and number of models to export.
 
-**Common workflow:** verify receptor and ligand inputs; decide whether to run docking or only export models from an existing `.out`; call the wrapper script; inspect logs and `run-summary.json`; report produced models and raw score output.
+**Common workflow:** verify receptor and ligand inputs; decide whether to run docking or only export models from an existing `.out`; let the agent call the appropriate wrapper internally; inspect logs and `run-summary.json`; report produced models and raw score output.
 
-**Example commands:**
+**Agent-style requests:**
 
-```bash
-python3 skills/hdock/scripts/run_hdock_case.py receptor.pdb ligand.pdb \
-  --output-dir runs/case1 \
-  --nmax 20
-
-python3 skills/hdock/scripts/run_hdock_case.py \
-  --hdock-out hdock.out \
-  --output-dir runs/from-out \
-  --nmax 20
-```
+- `/hdock run docking for receptor.pdb and ligand.pdb, then export the top 20 models`
+- `/hdock use the provided rsite.txt and lsite.txt restraints for this docking case`
+- `/hdock generate complex models from this existing hdock.out`
+- `/hdock package this HDOCK case so the inputs, logs, scores, and models are easy to inspect`
 
 **Expected outputs:** `hdock.out`, `models.pdb`, copied inputs, stdout/stderr logs, and `run-summary.json`.
 
@@ -173,14 +170,12 @@ python3 skills/hdock/scripts/run_hdock_case.py \
 
 **Common workflow:** check the HADDOCK environment; create or select a project; prepare restraints and parameters; run the appropriate example or custom project; analyze clusters, scores, FCC/iRMSD when available, and top models.
 
-**Example command pattern:**
+**Agent-style requests:**
 
-```bash
-# after activating the local HADDOCK environment
-haddock2.5
-```
-
-Use the skill's helper commands and references for project creation, parameter editing, restraint generation, and result analysis.
+- `/haddock create a protein-protein HADDOCK project from these two PDB files`
+- `/haddock prepare AIR restraints from these active and passive residues`
+- `/haddock run the protein-DNA example and summarize the output`
+- `/haddock analyze this HADDOCK run directory and rank the clusters`
 
 **Expected outputs:** HADDOCK run directories, parameter files, restraints, cluster summaries, score tables, and selected top models.
 
@@ -196,24 +191,14 @@ Use the skill's helper commands and references for project creation, parameter e
 
 **Typical inputs:** receptor PDBQT for docking/hybrid modes, reference ligand for similarity/hybrid modes, ligand directory or ligand index, search box center and size, explicit search mode, and output directory.
 
-**Common workflow:** identify the mode as docking, similarity, or hybrid; build a ligand index if only a ligand directory is provided; confirm search box and `search_mode`; run the wrapper script; summarize `*_out.pdbqt` files into a ranked CSV.
+**Common workflow:** identify the mode as docking, similarity, or hybrid; build a ligand index if only a ligand directory is provided; confirm search box and `search_mode`; let the agent run the internal wrapper; summarize `*_out.pdbqt` files into a ranked CSV.
 
-**Example commands:**
+**Agent-style requests:**
 
-```bash
-python3 skills/unidock-pro/scripts/make_ligand_index.py /path/to/ligands /path/to/ligand_index.txt
-
-python3 skills/unidock-pro/scripts/run_unidock_case.py \
-  --mode docking \
-  --receptor /path/to/receptor.pdbqt \
-  --ligand-index /path/to/ligand_index.txt \
-  --center-x 0 --center-y 0 --center-z 0 \
-  --size-x 20 --size-y 20 --size-z 20 \
-  --search-mode <fast|balance|detail> \
-  --output-dir /path/to/results
-
-python3 skills/unidock-pro/scripts/analyze_unidock_results.py /path/to/results /path/to/docking_results.csv --top-n 50
-```
+- `/unidock-pro run classical docking for this receptor and ligand library, then output the top 50 ranked ligands`
+- `/unidock-pro create a ligand index for this ligand directory`
+- `/unidock-pro run similarity searching using this reference ligand`
+- `/unidock-pro run hybrid docking with this receptor and co-crystal reference ligand`
 
 **Expected outputs:** UniDock-Pro output PDBQT files, logs, ranked CSV summaries, and a report of the actual mode and assumptions used.
 
@@ -231,16 +216,12 @@ python3 skills/unidock-pro/scripts/analyze_unidock_results.py /path/to/results /
 
 **Common workflow:** inspect the live environment; validate Python, torch/CUDA, Foundry CLIs, and checkpoints; run a small demo or smoke test before expensive GPU work; prepare design inputs from inspected structures; run low-memory first-pass settings when appropriate; post-process with MPNN/RF3/QC tools when requested.
 
-**Example commands:**
+**Agent-style requests:**
 
-```bash
-python skills/rfdiffusion3/scripts/check_foundry_env.py \
-  --checkpoint-dir /path/to/foundry/checkpoints
-
-FOUNDRY_CHECKPOINT_DIRS=/path/to/foundry/checkpoints \
-rfd3 design out_dir=/path/to/out inputs=/path/to/input.json \
-  prevalidate_inputs=True diffusion_batch_size=1 n_batches=1 low_memory_mode=True
-```
+- `/rfdiffusion3 check whether this machine can run RFdiffusion3 with the available checkpoints`
+- `/rfdiffusion3 prepare a smoke test and explain whether the environment is ready`
+- `/rfdiffusion3 design a binder for this target structure after inspecting chain IDs and residue numbers`
+- `/rfdiffusion3 prepare MPNN and RF3 post-processing for these RFD3 designs`
 
 **Expected outputs:** RFD3 design outputs, optional trajectories, design metadata, MPNN/RF3 post-processing configs, and QC summaries.
 
@@ -258,15 +239,12 @@ rfd3 design out_dir=/path/to/out inputs=/path/to/input.json \
 
 **Common workflow:** run quick ranking across a directory; export Markdown or CSV; run deeper analysis for selected samples; inspect PAE and interface metrics; keep biological interpretation bounded by prediction confidence.
 
-**Example commands:**
+**Agent-style requests:**
 
-```bash
-python skills/af-analysis/af3_ranking.py --input . --output af3_ranking --format both
-
-python skills/af-analysis/af3_deepanalyze.py \
-  --zip fold_example.zip \
-  --output example_af3_analysis/
-```
+- `/af-analysis rank all AlphaFold3 fold_*.zip files in this directory`
+- `/af-analysis analyze this AF3 result and generate PAE plots plus interface metrics`
+- `/af-analysis compare these AF3 models by ipTM_d0, pDockQ, mpDockQ, and PAE`
+- `/af-analysis export the ranking table as Markdown and CSV`
 
 **Expected outputs:** ranking tables, CSV/Markdown summaries, PAE heatmaps, analysis summaries, and optional notebook-style 3D visualization support.
 
