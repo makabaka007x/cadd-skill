@@ -10,15 +10,15 @@ The repository is intended to be an agent skill manual and a portable skill bund
 
 Use this table when you know the research action but are not sure which skill to invoke.
 
-| You want to... | Use | Ask the agent like this | Typical result |
-| --- | --- | --- | --- |
-| Prepare or package an Amber MD system | `amber-md-expert` | `/amber-md-expert package this system for HPC Amber MD` | Amber run directory with inputs, submit scripts, analysis, and resume notes. |
-| Analyze Amber trajectories or binding energetics | `amber-md-expert` | `/amber-md-expert analyze this trajectory and summarize RMSD, contacts, and MM/GBSA` | Trajectory metrics, tables, plots, and a bounded interpretation report. |
-| Run local HDOCK docking | `hdock` | `/hdock run docking for these receptor and ligand PDB files` | `hdock.out`, exported complex models, copied inputs, logs, and run summary. |
-| Build or analyze a HADDOCK project | `haddock` | `/haddock create a HADDOCK project with these structures and restraints` | HADDOCK project files, restraints, run outputs, cluster summaries, and ranked models. |
-| Screen a ligand library on GPU | `unidock-pro` | `/unidock-pro screen this ligand library against this receptor and rank the top hits` | Ligand index, UniDock-Pro outputs, ranked CSV, and mode/search-box assumptions. |
-| Design proteins or binders with RFD3 | `rfdiffusion3` | `/rfdiffusion3 design a binder for this target after checking chains and residues` | RFD3 design outputs, optional MPNN/RF3 post-processing configs, and QC notes. |
-| Rank or inspect AlphaFold3 predictions | `af-analysis` | `/af-analysis rank these AF3 results and generate PAE/interface metrics` | Markdown/CSV rankings, ipTM_d0/pDockQ/mpDockQ metrics, PAE plots, and summaries. |
+| You want to... | Use | Upstream method/tool | Ask the agent like this | Typical result |
+| --- | --- | --- | --- | --- |
+| Prepare or package an Amber MD system | `amber-md-expert` | [Amber](https://ambermd.org/) / [Amber-MD GitHub](https://github.com/amber-md) | `/amber-md-expert package this system for HPC Amber MD` | Amber run directory with inputs, submit scripts, analysis, and resume notes. |
+| Analyze Amber trajectories or binding energetics | `amber-md-expert` | [AmberTools](https://ambermd.org/AmberTools.php) / [Amber-MD GitHub](https://github.com/amber-md) | `/amber-md-expert analyze this trajectory and summarize RMSD, contacts, and MM/GBSA` | Trajectory metrics, tables, plots, and a bounded interpretation report. |
+| Run local HDOCK docking | `hdock` | [HDOCK official site](https://hdock.phys.hust.edu.cn/) | `/hdock run docking for these receptor and ligand PDB files` | `hdock.out`, exported complex models, copied inputs, logs, and run summary. |
+| Build or analyze a HADDOCK project | `haddock` | [HADDOCK site](https://www.bonvinlab.org/software/haddock2.4/) / [haddocking GitHub](https://github.com/haddocking) | `/haddock create a HADDOCK project with these structures and restraints` | HADDOCK project files, restraints, run outputs, cluster summaries, and ranked models. |
+| Screen a ligand library on GPU | `unidock-pro` | [Uni-Dock GitHub](https://github.com/dptech-corp/Uni-Dock) / [Uni-Dock2 GitHub](https://github.com/dptech-corp/Uni-Dock2) | `/unidock-pro screen this ligand library against this receptor and rank the top hits` | Ligand index, UniDock-Pro outputs, ranked CSV, and mode/search-box assumptions. |
+| Design proteins or binders with RFD3 | `rfdiffusion3` | [Foundry GitHub](https://github.com/RosettaCommons/foundry) / [RFD3 docs](https://rosettacommons.github.io/foundry/) | `/rfdiffusion3 design a binder for this target after checking chains and residues` | RFD3 design outputs, optional MPNN/RF3 post-processing configs, and QC notes. |
+| Rank or inspect AlphaFold3 predictions | `af-analysis` | [af_analysis GitHub](https://github.com/samuelmurail/af_analysis) / [docs](https://af-analysis.readthedocs.io/) | `/af-analysis rank these AF3 results and generate PAE/interface metrics` | Markdown/CSV rankings, ipTM_d0/pDockQ/mpDockQ metrics, PAE plots, and summaries. |
 
 ## Repository Layout
 
