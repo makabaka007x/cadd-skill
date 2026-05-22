@@ -33,18 +33,53 @@ skills/
 
 Each skill keeps its own `SKILL.md` plus optional `scripts/`, `references/`, `assets/`, `templates/`, or `agents/` files. Read the skill's `SKILL.md` first, then load only the specific referenced script or document needed for the task.
 
-## Installation
+## Local Clone Tutorial
 
-Clone the repository:
+Use this section when you want a local editable copy of the repository before installing skills into Codex or Claude.
+
+1. Check that Git is available.
 
 ```bash
+git --version
+```
+
+2. Choose a working directory and clone the repository.
+
+```bash
+mkdir -p ~/repos
+cd ~/repos
 git clone https://github.com/makabaka007x/cadd-skill.git
 cd cadd-skill
 ```
 
+3. Confirm that the skill directories exist.
+
+```bash
+ls skills
+find skills -maxdepth 2 -name SKILL.md | sort
+```
+
+4. Pull future updates from GitHub.
+
+```bash
+cd ~/repos/cadd-skill
+git pull --ff-only
+```
+
+5. If you prefer SSH and your GitHub SSH key is already configured, clone with SSH instead.
+
+```bash
+git clone git@github.com:makabaka007x/cadd-skill.git
+```
+
+Use HTTPS for the simplest read-only setup. Use SSH when you plan to push changes back to the repository.
+
+## Install Into Agent Skill Roots
+
 Install all skills into a Codex skill root:
 
 ```bash
+cd ~/repos/cadd-skill
 mkdir -p ~/.codex/skills
 for skill_dir in skills/*; do
   rsync -a "$skill_dir" ~/.codex/skills/
@@ -54,6 +89,7 @@ done
 Install one skill only:
 
 ```bash
+cd ~/repos/cadd-skill
 mkdir -p ~/.codex/skills
 rsync -a skills/unidock-pro ~/.codex/skills/
 ```
@@ -61,6 +97,7 @@ rsync -a skills/unidock-pro ~/.codex/skills/
 For Claude-style local skill roots, copy the same directories into the active Claude skill directory, for example:
 
 ```bash
+cd ~/repos/cadd-skill
 mkdir -p ~/.claude/skills
 rsync -a skills/unidock-pro ~/.claude/skills/
 ```
