@@ -2,7 +2,7 @@
 
 Chinese version: [README.zh-CN.md](README.zh-CN.md)
 
-This repository collects reusable Codex/Claude-style skills for CADD/AIDD work, including molecular dynamics, enhanced sampling, molecular docking, GPU virtual screening, protein design, and AlphaFold3 result analysis.
+This repository collects reusable Codex/Claude-style skills for CADD/AIDD work, including molecular dynamics, molecular docking, GPU virtual screening, protein design, and AlphaFold3 result analysis.
 
 The repository is intended to be an agent skill manual and a portable skill bundle. The skills are not full software installers. They provide reusable instructions, helper scripts, templates, and safety checks that help an agent turn a scientific request into a reproducible workflow or run directory.
 
@@ -11,7 +11,6 @@ The repository is intended to be an agent skill manual and a portable skill bund
 | Task | Recommended skill | Use it for |
 | --- | --- | --- |
 | Amber molecular dynamics | `amber-md-expert` | Amber/AmberTools system preparation, explicit or implicit solvent MD, restart handling, cpptraj analysis, MM/GBSA, and HPC-ready run bundles. |
-| GROMACS enhanced sampling | `gmx-workflow-packer` | GROMACS tREMD, REST2/HREX-style packaging, replica layout, preflight checks, demux, and exchange analysis. |
 | Local HDOCK docking | `hdock` | Reproducible HDOCKlite protein-protein or protein-nucleic-acid docking cases, including optional site restraints and model export. |
 | HADDOCK 2.5 docking | `haddock` | Information-driven biomolecular docking projects, restraint handling, example runs, and result analysis. |
 | GPU virtual screening | `unidock-pro` | UniDock-Pro classical docking, ligand similarity search, hybrid docking, ligand indexing, batch execution, and result ranking. |
@@ -25,13 +24,12 @@ skills/
   amber-md-expert/
   hdock/
   haddock/
-  gmx-workflow-packer/
   unidock-pro/
   rfdiffusion3/
   af-analysis/
 ```
 
-Each skill keeps its own `SKILL.md` plus optional `scripts/`, `references/`, `assets/`, `templates/`, or `agents/` files. Read the skill's `SKILL.md` first, then load only the specific referenced script or document needed for the task.
+Each listed skill keeps its own `SKILL.md` plus optional `scripts/`, `references/`, `assets/`, `templates/`, or `agents/` files. Read the skill's `SKILL.md` first, then load only the specific referenced script or document needed for the task.
 
 ## Local Clone Tutorial
 
@@ -76,13 +74,13 @@ Use HTTPS for the simplest read-only setup. Use SSH when you plan to push change
 
 ## Install Into Agent Skill Roots
 
-Install all skills into a Codex skill root:
+Install all documented skills into a Codex skill root:
 
 ```bash
 cd ~/repos/cadd-skill
 mkdir -p ~/.codex/skills
-for skill_dir in skills/*; do
-  rsync -a "$skill_dir" ~/.codex/skills/
+for skill_name in amber-md-expert hdock haddock unidock-pro rfdiffusion3 af-analysis; do
+  rsync -a "skills/$skill_name" ~/.codex/skills/
 done
 ```
 
@@ -133,29 +131,6 @@ python3 skills/amber-md-expert/scripts/validate_amber_task.py /path/to/amber_run
 **Expected outputs:** a structured run directory, preparation files, MD input files, submit scripts, analysis scripts, restart/resume notes, and an `UPLOAD_AND_RUN.md` style instruction file when packaging for HPC.
 
 **Important caveats:** force-field and water-model choices are scientific decisions, not generic defaults. Production time scales must be confirmed before final delivery. HPC partition, QOS, module, and wall-time policies must be adapted to the target cluster.
-
-### `gmx-workflow-packer`
-
-**Category:** GROMACS enhanced sampling and workflow packaging.
-
-**What it does:** This skill packages GROMACS tREMD and REST2/HREX-style jobs into reproducible directories with preflight checks, replica layout, run scripts, state tracking, and post-processing support.
-
-**Use when the request mentions:** GROMACS, `gmx`, tREMD, REMD, REST2, HREX, PLUMED `partial_tempering`, temperature ladders, replica exchange, demux, continuation, `step1`/`step2`, or HPC packaging for multi-replica simulations.
-
-**Typical inputs:** `topol.top`, starting `.gro` or equivalent coordinate files, MDP templates, temperature or effective-temperature ladder, replica count, cluster limits, and whether the available GROMACS build supports `-hrex` and `-plumed`.
-
-**Common workflow:** run an environment check; choose tREMD or REST2 mode; read or generate YAML config; generate replica directories and run scripts; render post-processing scripts; block production script generation if the environment lacks required HREX/PLUMED support.
-
-**Example commands:**
-
-```bash
-python3 skills/gmx-workflow-packer/scripts/check_env.py --mode rest2 --check-hrex
-python3 skills/gmx-workflow-packer/scripts/build_remd_bundle.py --config /path/to/config.yaml
-```
-
-**Expected outputs:** `step1/`, `step2/`, `analysis/`, zero-padded replica directories, `state.yaml`, demux scripts, exchange analysis helpers, and run instructions.
-
-**Important caveats:** REST2 effective temperature is not the thermostat temperature. Do not fake REST2 exchange with `-replex` if the GROMACS build lacks `-hrex`. Replica count must fit the actual scheduler/QOS limits.
 
 ### `hdock`
 
