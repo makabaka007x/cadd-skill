@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="CADDskill-github-banner.png" alt="CADD Skill Collection banner">
+</p>
+
 # CADD Skill Collection
 
 Chinese version: [README.zh-CN.md](README.zh-CN.md)
