@@ -1,14 +1,6 @@
 ---
 name: af-analysis
-description: |
-  使用 af-analysis 包深度分析 AlphaFold3 预测结果。支持：
-  (1) AlphaFold Server zip 文件 (fold_*.zip)
-  (2) 本地运行输出的目录结构 (.cif/.pdb + json)
-  提供 ipTM_d0、pDockQ、mpDockQ、PAE 矩阵等高级指标和可视化。
-metadata:
-  author: Claude Code
-  version: 1.0.0
-  date: 2026-03-31
+description: Analyze AlphaFold3 prediction outputs with the af-analysis Python package. Use for AlphaFold Server fold_*.zip files, local AF3 output directories containing model structures and JSON files, ipTM_d0, pDockQ, mpDockQ, LIS, PAE matrices, ranking AF3 models, or generating AF3 interface-quality summaries and plots.
 ---
 
 # AlphaFold3 深度分析 (af-analysis)
@@ -55,7 +47,7 @@ python /path/to/cadd-skill/skills/af-analysis/af3_ranking.py --input . --output 
 ### 2. 深度分析单个样本
 
 ```bash
-python /path/to/cadd-skill/skills/af-analysis/af3_deepanalyze.py --zip fold_ube3a_kv32.zip --output ube3a_kv32_analysis/
+python /path/to/cadd-skill/skills/af-analysis/af3_deepanalyze.py --zip fold_target_complex.zip --output target_complex_analysis/
 ```
 
 输出包括：
@@ -81,9 +73,9 @@ python /path/to/cadd-skill/skills/af-analysis/af3_deepanalyze.py --zip fold_ube3
 ```markdown
 | 排名 | 项目名称 | ipTM | ipTM_d0 | pDockQ | PTM | Chain Pair PAE Min |
 |------|----------|------|---------|--------|-----|-------------------|
-| 1 | kv32_ppp6c_1 | 0.49 | 0.52 | 0.61 | 0.52 | 3.66 |
-| 2 | ube3a_kv32 | 0.42 | 0.45 | 0.53 | 0.45 | 3.82 |
-| 3 | ube3a_ppp6c | 0.16 | 0.18 | 0.12 | 0.57 | 25.62 |
+| 1 | target_partner_1 | 0.49 | 0.52 | 0.61 | 0.52 | 3.66 |
+| 2 | target_partner_2 | 0.42 | 0.45 | 0.53 | 0.45 | 3.82 |
+| 3 | low_confidence_pair | 0.16 | 0.18 | 0.12 | 0.57 | 25.62 |
 ```
 
 ### 深度分析报告

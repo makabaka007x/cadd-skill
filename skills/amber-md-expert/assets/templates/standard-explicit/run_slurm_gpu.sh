@@ -1,14 +1,14 @@
 #!/bin/bash
 
-#SBATCH -J EutC         # Job name
-#SBATCH --partition=gpu4090     # gpu4090
-#SBATCH --qos=4gpus
+#SBATCH -J amber-md
+#SBATCH --partition=gpu
+#SBATCH --qos=gpu
 #SBATCH -N 1                    # Single node
 #SBATCH --ntasks-per-node=1     
 #SBATCH --cpus-per-task=4       
-#SBATCH --gres=gpu:1            # 1 GPUs
-#SBATCH -o %j.out         # Output result
-#SBATCH -e %j.err          # Error output
+#SBATCH --gres=gpu:1
+#SBATCH -o %j.out
+#SBATCH -e %j.err
 
 
 ml load amber

@@ -12,7 +12,7 @@
 
 ## Local Policy
 
-This user's C drive is tight. Keep Foundry on E:
+Use user-provided install paths or the placeholders below:
 
 ```text
 Conda env:      /path/to/conda-envs/foundry-py312
@@ -23,17 +23,17 @@ Conda cache:    /path/to/conda-pkgs
 Pip cache:      /path/to/pip-cache
 ```
 
-`torch-week1` is a known RTX 5080 PyTorch reference but is Python 3.11, so it is not the Foundry install target.
+Use a dedicated Python 3.12 environment for Foundry unless the installed Foundry version documents a different requirement.
 
-## Installed State
+## Validation Targets
 
-The local install was validated on 2026-05-07:
+Record the actual validated state before claiming the environment is ready:
 
 ```text
-Python: 3.12.13
-PyTorch: 2.11.0+cu128
-CUDA runtime: 12.8
-GPU: NVIDIA GeForce RTX 5080 Laptop GPU
+Python: <version>
+PyTorch: <version>
+CUDA runtime: <version>
+GPU: <device name>
 Checkpoints: /path/to/foundry/checkpoints
 ```
 
@@ -68,11 +68,11 @@ foundry install proteinmpnn ligandmpnn --checkpoint-dir "$FOUNDRY_CKPT"
 export FOUNDRY_CHECKPOINT_DIRS="$FOUNDRY_CKPT"
 ```
 
-For this RTX 5080 machine, do not allow a reinstall to silently downgrade the working `torch 2.11.0+cu128` stack unless the replacement is explicitly verified.
+Do not allow a reinstall to silently downgrade a working PyTorch/CUDA stack unless the replacement is explicitly verified.
 
-## Blackwell / RTX 5080
+## CUDA Compatibility
 
-If PyTorch warns that GPU architecture is unsupported, apply the official tutorial's cu128 nightly fallback:
+If PyTorch warns that the GPU architecture is unsupported, use the PyTorch selector or the official Foundry tutorial's recommended CUDA wheel for the target machine. For cu128 nightly fallback:
 
 ```bash
 python -m pip install --pre torch torchvision torchaudio \

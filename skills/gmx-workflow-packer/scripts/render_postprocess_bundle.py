@@ -423,7 +423,7 @@ def main() -> int:
     parser.add_argument("--deffnm", default="5MD")
     parser.add_argument("--module-name", required=True)
     parser.add_argument("--gmx-exec", default="gmx_mpi")
-    parser.add_argument("--cpu-partition", default="cpu8358")
+    parser.add_argument("--cpu-partition", default="cpu")
     parser.add_argument("--cpu-qos", default="52cores")
     parser.add_argument("--temperatures", default="")
     args = parser.parse_args()

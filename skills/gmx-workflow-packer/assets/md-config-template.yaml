@@ -1,0 +1,43 @@
+project:
+  name: demo_gmx_md
+  system_class: standard_protein
+  output_dir: ./demo_gmx_md_bundle
+
+sampling:
+  mode: md
+  deffnm: md
+  temperature: 300.0
+  maxwarn: 1
+
+inputs:
+  prepared:
+    em_gro: /absolute/path/to/1EM.gro
+    topol_top: /absolute/path/to/topol.top
+    include_files: []
+  protein_pdb: /absolute/path/to/protein.pdb
+  box_distance_nm: 1.0
+  ion_concentration_molar: 0.15
+  neutralize: true
+
+forcefield:
+  protein: amber99sb-ildn
+  water: tip3p
+
+cluster:
+  gpu:
+    partition: gpu
+    qos: gpu
+    ntasks_per_node: 1
+    cpus_per_task: 4
+    module: gromacs
+    gmx_exec: gmx
+
+steps:
+  pr_nsteps: 1000
+  nvt_nsteps: 50000
+  npt_nsteps: 50000
+  md_nsteps: 500000
+  checkpoint_interval_minutes: 15
+
+restart:
+  state_file: state.yaml

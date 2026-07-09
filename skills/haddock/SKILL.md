@@ -1,7 +1,6 @@
 ---
 name: haddock
-description: HADDOCK 2.5 生物分子对接辅助工具 - 运行对接模拟、分析结果、管理约束文件、创建项目
-license: Proprietary
+description: Create, run, and analyze HADDOCK 2.5 biomolecular docking projects. Use for HADDOCK/HADDOCK2.5, CNS/HADDOCK environment checks, protein-protein, protein-nucleic-acid, protein-ligand, peptide, AIR restraints, active/passive residues, restraint-file management, project setup, cluster scoring, or top-model analysis.
 ---
 
 # HADDOCK 2.5 Skill
@@ -10,7 +9,7 @@ license: Proprietary
 
 HADDOCK (High Ambiguity Driven biomolecular DOCKing) 是一个信息驱动的生物分子对接软件，用于预测蛋白质 - 蛋白质、蛋白质 - 核酸、蛋白质 - 小分子等复合物的三维结构。
 
-### 用户环境
+### 环境模板
 
 ```bash
 # HADDOCK 安装路径
@@ -25,11 +24,10 @@ source haddock_configure.sh
 haddock2.5
 ```
 
-### 系统配置
+### 运行配置
 
-- **CPU**: 24 核
-- **并行模式**: 批量并行 (batchmode=True)
-- **任务批量**: it0=10, it1=5, water=5
+- CPU 核数、batchmode 和 it0/it1/water 批量大小必须按目标机器资源调整。
+- 不要把某个本地环境的参数当作所有用户默认值。
 
 ---
 

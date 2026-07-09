@@ -41,7 +41,7 @@ temperature_ladder:
 rest2:
   workflow_version: v2
   topology_strategy: plumed_partial_tempering
-  exchange_backend: xpsz_gromacs_2025_1_no_hrex
+  exchange_backend: plumed_partial_tempering_hrex
   reference_temperature: 300.0
   tmin: 300.0
   tmax: 500.0
@@ -58,23 +58,23 @@ rest2:
 
 cluster:
   capabilities:
-    gromacs_version: 2025.1-spack
+    gromacs_version: unknown
     has_plumed: true
     has_hrex: false
-    note: xpsz GROMACS 2025.1 module exposes -plumed but not -hrex.
+    note: Replace with the target module capability check.
   gpu:
-    partition: gpu4090
-    qos: 4gpus
+    partition: gpu
+    qos: gpu
     ntasks_per_node: 1
     cpus_per_task: 4
     module: gromacs/2025.1
     gmx_exec: gmx_mpi
   cpu:
-    partition: cpu8358
-    qos: 26cores
+    partition: cpu
+    qos: normal
     ntasks_per_node: auto
     cpus_per_task: 1
-    max_total_tasks: 26
+    max_total_tasks: 32
     module: gromacs/2025.1
     gmx_exec: gmx_mpi
     mpi_launch: mpirun

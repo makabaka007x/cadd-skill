@@ -3,13 +3,11 @@
 ## 定位
 
 这个参考只服务标准 GROMACS 温度 REMD。
-REST2 v2 见 [rest2-workflow.md](rest2-workflow.md)。这里的目标是把标准温度 REMD 整理成稳定、可复用、适合超算投递的运行包。
+REST2 v2 见 [rest2-workflow.md](rest2-workflow.md)。这里的目标是把标准温度 REMD 整理成稳定、可复用、适合目标机器投递的运行包。
 
-## 当前工作流来源
+## 工作流来源
 
-本参考来自用户提供的 `remd/Gromacs REMD.docx` 与同目录下的 `EM.mdp`、`PR.mdp`、`NVT.mdp`、`NPT.mdp`、`md.mdp`、`step1.sh`、`step2.sh`。
-
-当前真实流程可以概括为：
+标准流程可以概括为：
 
 1. 本地准备体系
 - `pdb2gmx`
@@ -43,47 +41,40 @@ REST2 v2 见 [rest2-workflow.md](rest2-workflow.md)。这里的目标是把标�
 - 重新组织轨迹
 - 分析交换率、walk、RTT、residence time
 
-## 默认集群
+## 集群配置
 
 ### GPU 阶段
 
-- `partition=gpu4090`
-- `qos=4gpus`
+- `partition=<gpu-partition>`
+- `qos=<gpu-qos>`
 - `cpus-per-task=4`
 - 主要用于 `step1` 和 `step2`
 
 ### CPU 阶段
 
-- `partition=cpu8358`
-- `qos=26cores`
+- `partition=<cpu-partition>`
+- `qos=<cpu-qos>`
 - `cpus-per-task=1`
-- `max_total_tasks=26`
+- `max_total_tasks=<cluster-limit>`
 - 主要用于正式 `run.sh`
 
-用户当前账号 `<your-hpc-account>` 的可用 CPU QOS 是 `26cores`，不是 `52cores`。`26cores` 的关键限制：
-
-- `MaxTRESPU=cpu=26`
-- `MaxWall=7-00:00:00`
-- `MaxJobsPU=26`
-- `MaxSubmitPU=26`
-
-所以正式多副本 CPU 作业默认：
+正式多副本 CPU 作业模板：
 
 ```bash
-#SBATCH -p cpu8358
-#SBATCH --qos=26cores
+#SBATCH -p <cpu-partition>
+#SBATCH --qos=<cpu-qos>
 #SBATCH -N 1
-#SBATCH --ntasks-per-node=<replica数，最多26>
+#SBATCH --ntasks-per-node=<replica-count>
 #SBATCH --cpus-per-task=1
 ```
 
-如果 replica 数超过 26，先减少 replica 数，或让用户确认已经获得 `52cores`/更高 QOS 后再改配置。
-默认模板使用 8-replica 手动温度表示例，避免自动梯度在示例体系上估出超过 `26cores` 权限的副本数。真实项目仍应先短跑检查交换率。
+如果 replica 数超过集群或 QOS 限制，先减少 replica 数，或让用户确认已经获得更高资源限制后再改配置。
+默认模板使用 8-replica 手动温度表示例。真实项目仍应先短跑检查交换率。
 
 ### 模块与可执行
 
-- 模块：默认 `gromacs/2025.1`；如果 xpsz 实际模块名不同，以用户确认能调用 `/gpfs/spack/.../gromacs-2025.1.../bin/gmx_mpi` 的模块为准。
-- 可执行：`gmx_mpi`
+- 模块：使用目标机器真实可用的 GROMACS 模块名。
+- 可执行：`gmx` 或 `gmx_mpi`，按模块实际提供的命令设置。
 
 ## 必须修正的旧问题
 
@@ -99,12 +90,7 @@ REST2 v2 见 [rest2-workflow.md](rest2-workflow.md)。这里的目标是把标�
 
 ### 2. 不再在正式 run 脚本里使用 `-maxh`
 
-用户已经明确要求：
-
-- `run.sh` 不要写时长限制
-- 集群默认七天终止任务
-
-所以 v1 的续跑逻辑必须建立在：
+续跑逻辑应建立在：
 
 - `-cpi`
 - `-append`

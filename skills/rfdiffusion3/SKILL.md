@@ -1,6 +1,6 @@
 ---
 name: rfdiffusion3
-description: Install, validate, teach, and run RosettaCommons Foundry/RFdiffusion3 workflows on this user's WSL/Conda RTX 5080 machine. Use when the user mentions RFdiffusion3, RFD3, Foundry, rc-foundry, RF3, ProteinMPNN, LigandMPNN, checkpoint downloads, official RFD3 tutorials, RFD3 design JSON/YAML inputs, protein binder, nucleic acid binder, small molecule binder, enzyme scaffold, partial diffusion, or asks to package/run/debug RFD3 jobs.
+description: Install, validate, teach, and run RosettaCommons Foundry/RFdiffusion3 workflows on a local or cluster Python/GPU environment. Use when the user mentions RFdiffusion3, RFD3, Foundry, rc-foundry, RF3, ProteinMPNN, LigandMPNN, checkpoint downloads, official RFD3 tutorials, RFD3 design JSON/YAML inputs, protein binders, nucleic-acid binders, small-molecule binders, enzyme scaffolds, partial diffusion, or asks to package/run/debug RFD3 jobs.
 ---
 
 # RFdiffusion3
@@ -18,7 +18,7 @@ conda_pkgs_dir=/path/to/conda-pkgs
 pip_cache_dir=/path/to/pip-cache
 ```
 
-Prefer the installed Python 3.12 Foundry env. Do not install into `torch-week1` unless explicitly requested; it is Python 3.11.
+Prefer a dedicated Python 3.12 Foundry environment unless the user provides a different supported installation.
 
 ## First Step
 
@@ -69,19 +69,19 @@ Minimum command:
 FOUNDRY_CHECKPOINT_DIRS=/path/to/foundry/checkpoints rfd3 design out_dir=<out_dir> inputs=<input.json>
 ```
 
-First-pass RTX 5080 settings:
+First-pass low-memory settings:
 
 ```bash
 rfd3 design out_dir=<out_dir> inputs=<input.json> prevalidate_inputs=True skip_existing=False diffusion_batch_size=1 n_batches=1 low_memory_mode=True dump_trajectories=False
 ```
 
-Before writing an input file, inspect the user's PDB/CIF for chain IDs, residue numbers, and ligand residue names. Prefer absolute input paths under `/mnt/e`.
+Before writing an input file, inspect the user's PDB/CIF for chain IDs, residue numbers, and ligand residue names. Prefer absolute input paths or paths relative to the run directory.
 
 ## References
 
 Read only the reference needed for the task:
 
-- `references/foundry-rfd3-workflow.md`: installation, local path policy, checkpoints, environment validation, RTX 5080 notes.
+- `references/foundry-rfd3-workflow.md`: installation, local path policy, checkpoints, and environment validation.
 - `references/rfd3-usage-workflows.md`: official tutorial distilled workflows, input fields, templates for PPI, NA, small molecule, enzyme scaffold, and partial diffusion.
 - `references/foundry-postprocess-workflow.md`: RFD3 outputs into ProteinMPNN/LigandMPNN, RF3 fold/review, Python API in-memory pipeline, and RMSD/QC.
 

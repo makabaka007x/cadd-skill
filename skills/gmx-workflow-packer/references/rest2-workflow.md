@@ -1,4 +1,4 @@
-# REST2 v2 本地打包与 xpsz 超算预检教程
+# REST2 v2 本地打包与 HREX 预检教程
 
 ## 适用场景
 
@@ -9,15 +9,15 @@
 - 目标是只增强溶质、蛋白或自定义 hot atoms 的采样。
 - 如果要直接做 PLUMED 多拓扑 REST2 生产，超算上的 GROMACS 必须支持 PLUMED/HREX，即 `mdrun -h` 中能同时看到 `-hrex` 和 `-plumed`。
 
-## v2 对当前 xpsz 模块的结论
+## v2 能力检查结论
 
-用户当前在 xpsz 上确认：
+先在目标机器上确认：
 
 ```text
-GROMACS 2025.1-spack: 有 -plumed，没有 -hrex
+gmx_mpi mdrun -h 同时列出 -plumed 和 -hrex
 ```
 
-这意味着：
+如果目标模块有 `-plumed` 但没有 `-hrex`，这意味着：
 
 - 可以使用 `-plumed` 做普通 PLUMED CV/增强采样。
 - 可以用 `plumed partial_tempering` 生成 REST2 缩放拓扑。
@@ -28,14 +28,14 @@ GROMACS 2025.1-spack: 有 -plumed，没有 -hrex
 - `rest2.hrex_available=false`：生成 REST2 拓扑准备与预检包，但生产 `run.sh` 是阻断脚本。
 - `rest2.hrex_available=true`：只有换到支持 `-hrex` 的 GROMACS/PLUMED 模块后，才生成真正的 REST2-HREX 生产脚本。
 
-如果需要当前模块上“上传后直接跑”，使用 `sampling.mode=tremd`。
+如果需要在当前模块上“上传后直接跑”，且缺少 `-hrex`，使用 `sampling.mode=tremd` 或常规 `sampling.mode=md`。
 
-当前 CPU 正式作业权限也要按用户账号实际 QOS 写：
+CPU 正式作业权限要按用户账号实际 QOS 写：
 
-- 可用 CPU QOS：`26cores`
-- 不可默认使用：`52cores`
-- `26cores` 上限：`MaxTRESPU=cpu=26`，`MaxWall=7-00:00:00`
-- 正式 `run.sh` 的 `--ntasks-per-node` 默认等于 replica 数，但 replica 数不能超过 26。
+- 可用 CPU partition/QOS
+- CPU/GPU 总核数或任务数限制
+- wall-time 限制
+- 正式 `run.sh` 的 `--ntasks-per-node` 默认等于 replica 数，但 replica 数不能超过账号/QOS 限制。
 
 不适合直接自动化的情况：
 
@@ -105,7 +105,7 @@ inputs:
 rest2:
   workflow_version: v2
   topology_strategy: plumed_partial_tempering
-  exchange_backend: xpsz_gromacs_2025_1_no_hrex
+  exchange_backend: plumed_partial_tempering_hrex
   reference_temperature: 300.0
   tmin: 300.0
   tmax: 500.0
@@ -121,8 +121,8 @@ rest2:
 
 cluster:
   cpu:
-    partition: cpu8358
-    qos: 26cores
+    partition: <cpu-partition>
+    qos: <cpu-qos>
     ntasks_per_node: auto
     cpus_per_task: 1
     max_total_tasks: 26
@@ -187,7 +187,7 @@ plumed --version
 bash prep/check_rest2_capability.sh
 ```
 
-## 当前 xpsz 模块下可以做什么
+## 缺少 `-hrex` 的模块下可以做什么
 
 可以准备拓扑和 `tpr`：
 
@@ -208,7 +208,7 @@ bash prep/prepare_rest2_topologies.sh
 sbatch run.sh
 ```
 
-v2 默认的 `run.sh` 会立即退出并说明缺少 `-hrex`，不会执行 `mdrun`。
+当 `rest2.hrex_available=false` 时，v2 默认的 `run.sh` 会立即退出并说明缺少 `-hrex`，不会执行 `mdrun`。
 
 ## 换到带 `-hrex` 的模块后怎么跑
 

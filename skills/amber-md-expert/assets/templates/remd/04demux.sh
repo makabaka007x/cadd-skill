@@ -2,13 +2,13 @@
 # demux.sh
 
 #SBATCH -J REMD-CPU        # Job name
-#SBATCH --partition=cpu8358     # gpua800
-#SBATCH --qos=52cores
+#SBATCH --partition=cpu
+#SBATCH --qos=normal
 #SBATCH -N 1                    # Single node
 #SBATCH --ntasks-per-node=32
 #SBATCH --cpus-per-task=10
-#SBATCH -o %j.out         # Output result
-#SBATCH -e %j.err          # Error output
+#SBATCH -o %j.out
+#SBATCH -e %j.err
 
 module load amber
 

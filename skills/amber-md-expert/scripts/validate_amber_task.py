@@ -42,7 +42,7 @@ def parse_in_file(path: Path) -> dict[str, str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("task_dir", type=Path)
-    parser.add_argument("--submit-script", default="run_slurm-4090.sh")
+    parser.add_argument("--submit-script", default="run_slurm_gpu.sh")
     args = parser.parse_args()
 
     task_dir = args.task_dir.resolve()

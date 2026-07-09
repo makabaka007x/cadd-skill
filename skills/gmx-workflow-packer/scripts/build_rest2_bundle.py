@@ -380,7 +380,7 @@ echo "OK: 当前 GROMACS 支持 -plumed 和 -hrex，可运行 PLUMED-HREX REST2�
 def render_blocked_run_script(cfg: dict[str, Any], nreplicas: int) -> str:
     cpu = cfg["cluster"]["cpu"]
     return f"""#!/usr/bin/env bash
-# REST2 v2 blocker for xpsz GROMACS 2025.1 style modules.
+# REST2 v2 blocker for modules without GROMACS/PLUMED HREX support.
 set -euo pipefail
 
 cd "$(dirname "$0")"
@@ -390,7 +390,7 @@ REST2 生产提交已被阻断。
 
 原因:
   当前配置 rest2.hrex_available=false。
-  用户在 xpsz 上确认的 GROMACS 2025.1-spack 模块只显示 -plumed，没有 -hrex。
+  目标 GROMACS/PLUMED 模块尚未确认同时支持 -plumed 和 -hrex。
   PLUMED partial_tempering 可以生成缩放拓扑，但多拓扑 REST2 交换运行需要 mdrun -hrex。
 
 已生成的内容:
@@ -572,10 +572,10 @@ rest2:
   hrex_available: false
 ```
 
-并且用户在 xpsz 超算上已经确认：
+这表示目标模块尚未确认：
 
 ```text
-GROMACS 2025.1-spack: 有 -plumed，没有 -hrex
+mdrun -h 同时列出 -plumed 和 -hrex
 ```
 
 PLUMED `partial_tempering` 只能负责生成缩放拓扑；多拓扑 REST2 replica exchange 运行还需要 `mdrun -hrex`。

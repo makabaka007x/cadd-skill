@@ -1,14 +1,14 @@
 ---
 name: amber-md-expert
-description: 把 Amber 分子动力学任务从本地准备整理为可直接上传并在超算提交的运行目录。用于 Amber 或 AmberTools、pdb4amber、tleap、antechamber、parmchk2、pmemd、cpptraj、MMPBSA 或 PBSA、REMD、膜蛋白或隐式溶剂体系、Zn 或非标准残基、contact 分析、DSSP 或 DSSPplot，以及任何“本地建模后打包到超算，一次 sbatch 就能跑”的场景。
+description: Prepare, package, resume, and analyze Amber/AmberTools molecular dynamics workflows for local or cluster execution. Use for Amber, AmberTools, pdb4amber, tleap, antechamber, parmchk2, pmemd/pmemd.cuda, cpptraj, MMPBSA.py, PBSA, REMD, membrane systems, implicit solvent, Zn or nonstandard residues, nucleic acids, contact analysis, DSSP/DSSPplot, or requests to create reproducible MD run directories.
 ---
 
 # Amber 分子动力学专家
 
 ## 概述
 
-用这个 skill 把 Amber 工作整理成“本地准备到超算直跑”的可复用流程。
-默认目标不是只解释 Amber，而是给用户留下一个可以直接上传并提交的运行目录。
+用这个 skill 把 Amber 工作整理成可复用、可检查的准备、运行或分析流程。
+默认目标不是只解释 Amber，而是给用户留下一个能在目标机器上适配后运行的目录。
 
 ## 默认工作流
 
@@ -16,15 +16,14 @@ description: 把 Amber 分子动力学任务从本地准备整理为可直接上
 
 1. 原始结构准备
 - 适用于用户只有蛋白、配体、复合物或残基文件，还没有最终 Amber 拓扑和坐标。
-- 在本地使用 `pdb4amber`、`antechamber`、`parmchk2` 和 `tleap` 完成准备。
-- 本地 AmberTools 命令默认假设运行在 `AmberTools25` 环境中，优先使用
-  `conda activate AmberTools25`。
-- 然后打包成可直接上传到超算的任务目录。
+- 使用 `pdb4amber`、`antechamber`、`parmchk2` 和 `tleap` 完成准备。
+- 先确认用户机器上的 AmberTools 环境名或安装路径，不把某个 conda 环境当成全局默认。
+- 然后打包成可在本地或目标集群适配运行的任务目录。
 
 2. 已有 Amber 拓扑打包
 - 适用于用户已经有 `.top/.prmtop/.parm7` 和 `.crd/.inpcrd/.rst7`。
 - 跳过本地建模。
-- 直接打包成超算可运行目录。
+- 直接打包成可运行或可上传的任务目录。
 
 3. 仅分析后处理
 - 适用于用户已经有轨迹，或者想做 cpptraj、MMPBSA、contact、DSSP/DSSPplot。
@@ -34,19 +33,18 @@ description: 把 Amber 分子动力学任务从本地准备整理为可直接上
 
 ## 打包规则
 
-准备超算任务目录时，遵循这些默认规则：
+准备本地或集群任务目录时，遵循这些默认规则：
 
-- 先适配当前集群。
-- 主流程优先使用 `gpu4090` 单卡 `pmemd.cuda` 脚本。
+- 先确认目标执行环境、队列/分区、模块名、GPU/CPU 资源和 wall-time 策略。
+- GPU Amber 生产脚本使用通用占位配置，交付前必须按目标集群改成真实分区和 QOS。
 - 优先创建新的任务目录，而不是直接修改标准模板。
 - 任务目录命名采用 `project_stage`，例如 `proj1_explicit_gpu`。
 - 可直接运行的文件放在任务根目录。
 - 追溯来源文件放在 `prep/`。
 - 生成 `UPLOAD_AND_RUN.md`，写清上传、提交和续跑说明。
 - 可以给出 `scp` 或 `rsync` 命令模板，但不要真的执行上传。
-- 默认不要往 `run.sh` 或其他提交脚本里添加 `#SBATCH --time`。
-- 当前超算环境默认七天终止任务，因此除非用户明确要求，否则沿用集群默认时间限制。
-- 当前学校超算的 CPU 分区至少包括 `cpu6348` 和 `cpu8358`；常规单节点 CPU 分析或 CPU rescue 优先用 `cpu6348`，REMD 或高核数 CPU 模板可用 `cpu8358`。
+- 不要把某个机构的 partition、QOS、module 或 wall-time 写成通用默认值。
+- 如果模板里有 `#SBATCH` 占位值，提醒用户按实际集群策略修改。
 
 在需要稳定打包时，使用 `scripts/create_run_dir.py`。
 更新上传说明时，使用 `scripts/render_upload_manifest.py`。

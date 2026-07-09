@@ -14,7 +14,7 @@ ASSETS_DIR = SKILL_DIR / "assets" / "templates"
 TEMPLATE_SPECS = {
     "standard-explicit": {
         "stage": "explicit_gpu",
-        "submit_script": "run_slurm-4090.sh",
+        "submit_script": "run_slurm_gpu.sh",
         "topology_name": "complex-amber.top",
         "coordinates_name": "complex-amber.crd",
         "prep_keep": ["leap.in"],
@@ -35,7 +35,7 @@ TEMPLATE_SPECS = {
     },
     "membrane": {
         "stage": "membrane_gpu",
-        "submit_script": "run_4090.sh",
+        "submit_script": "run_gpu.sh",
         "topology_name": "input.parm7",
         "coordinates_name": "input.rst7",
         "prep_keep": [],

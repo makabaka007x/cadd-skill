@@ -1,6 +1,6 @@
 # RFdiffusion3 Usage Workflows
 
-This reference condenses the official RFD3 tutorials into local, runnable patterns. Use it when generating input JSON/YAML or packaging jobs for the user.
+This reference condenses the official RFD3 tutorials into local, runnable patterns. Use it when generating input JSON/YAML or packaging jobs.
 
 ## Official Sources
 
@@ -14,7 +14,7 @@ This reference condenses the official RFD3 tutorials into local, runnable patter
 
 ## Local Run Defaults
 
-Use these settings for first-pass jobs on the user's 16GB RTX 5080:
+Use these conservative settings for first-pass or limited-memory jobs:
 
 ```bash
 prevalidate_inputs=True

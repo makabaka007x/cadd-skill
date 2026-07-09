@@ -1,4 +1,4 @@
 interface:
   display_name: "UniDock-Pro"
-  short_description: "用本机 UniDock-Pro 环境完成虚拟筛选与结果整理"
+  short_description: "用 UniDock-Pro 完成虚拟筛选与结果整理"
   default_prompt: "Use $unidock-pro to run UniDock-Pro virtual screening on this machine, validate the local setup, and summarize the results."

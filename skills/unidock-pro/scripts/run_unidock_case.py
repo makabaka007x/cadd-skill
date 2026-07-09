@@ -39,7 +39,7 @@ class Launcher:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="在本机上运行 UniDock-Pro，并自动选择最稳妥的环境调用方式。"
+        description="运行 UniDock-Pro，并自动选择最稳妥的环境调用方式。"
     )
     parser.add_argument(
         "--mode",
@@ -292,7 +292,7 @@ def select_launcher(binary_path: Path, env_prefix: Path) -> Launcher:
 
     raise ValidationError(
         "没有找到可运行的 UniDock-Pro 调用方式。请先确认 build/udp 存在，"
-        "或在本机执行 `conda activate unidock-pro && cmake -B build && cmake --build build -j$(nproc)` 重新构建。"
+        "或执行 `conda activate unidock-pro && cmake -B build && cmake --build build -j$(nproc)` 重新构建。"
     )
 
 
@@ -355,7 +355,7 @@ def main() -> int:
     binary_path = (args.repo_root / "build" / "udp").resolve()
     if not binary_path.exists():
         print(f"[ERROR] UniDock-Pro 二进制不存在：{binary_path}", file=sys.stderr)
-        print("请先在本机仓库中构建 `build/udp`。", file=sys.stderr)
+        print("请先在 UniDock-Pro 仓库中构建 `build/udp`。", file=sys.stderr)
         return 2
 
     try:

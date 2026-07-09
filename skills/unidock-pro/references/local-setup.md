@@ -1,4 +1,4 @@
-# UniDock-Pro 本机事实
+# UniDock-Pro 本地安装模板
 
 ## 路径
 
@@ -8,13 +8,13 @@
 - 示例目录：`/path/to/UniDock-Pro/example`
 - 现成结果目录：`/path/to/UniDock-Pro/results`
 
-## 本机环境判定
+## 环境判定
 
-本机 `conda info --envs` 已经能看到：
+先用 `conda info --envs` 或等效命令确认目标机器是否有：
 
 - `unidock-pro` -> `/path/to/conda-envs/unidock-pro`
 
-因此优先采用下面的探测顺序：
+优先采用下面的探测顺序：
 
 1. 直接运行 `/path/to/UniDock-Pro/build/udp`
 2. `source ~/miniconda3/etc/profile.d/conda.sh && conda activate unidock-pro`

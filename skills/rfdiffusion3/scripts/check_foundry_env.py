@@ -64,7 +64,7 @@ def check_torch(require_gpu: bool) -> bool:
         except Exception as exc:  # pragma: no cover - diagnostic script
             ok &= status("GPU tensor smoke test", False, repr(exc))
     elif require_gpu:
-        warn("GPU unavailable", "RFD3 can run on CPU, but this machine should use RTX 5080")
+        warn("GPU unavailable", "RFD3 can run on CPU, but practical design jobs usually require a compatible CUDA GPU")
     return ok
 
 

@@ -54,7 +54,7 @@ sbatch {submit_script}
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("task_dir", type=Path)
-    parser.add_argument("--submit-script", default="run_slurm-4090.sh")
+    parser.add_argument("--submit-script", default="run_slurm_gpu.sh")
     parser.add_argument("--remote-user", default="your_username")
     parser.add_argument("--remote-host", default="your.cluster.edu")
     parser.add_argument("--remote-path", default="~/amber-runs")

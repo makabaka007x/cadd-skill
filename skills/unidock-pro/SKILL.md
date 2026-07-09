@@ -1,18 +1,18 @@
 ---
 name: unidock-pro
-description: 使用本机 UniDock-Pro 环境执行 GPU 虚拟筛选，并在 classical docking、ligand similarity searching、hybrid docking 三类任务中完成环境探测、构建验证、批量运行和结果汇总。用户提到 UniDock-Pro、`udp`、虚拟筛选、`receptor.pdbqt`、`reference_ligand`、`ligand_index`、`ligand_dir`、`search_mode`、对接结果排序，或希望把当前机器的 UniDock-Pro 工作流整理成可复用脚本时使用。
+description: Run and package UniDock-Pro GPU virtual screening workflows for classical docking, ligand similarity searching, and hybrid docking. Use when the user mentions UniDock-Pro, udp, receptor.pdbqt, reference_ligand, ligand_index, ligand_dir, search_mode, docking score ranking, batch screening, or reproducible UniDock-Pro result summaries.
 ---
 
-# UniDock-Pro 本地虚拟筛选
+# UniDock-Pro 虚拟筛选
 
-把任务默认理解为“在这台机器上交付一个可复现的 UniDock-Pro 运行结果”，不要只解释命令行。
+把任务默认理解为“交付一个可复现的 UniDock-Pro 运行结果”，不要只解释命令行。
 优先使用 `scripts/run_unidock_case.py`、`scripts/make_ligand_index.py`、`scripts/analyze_unidock_results.py`，避免临时手写长命令。
 
 ## 默认工作流
 
-1. 先读 `references/local-setup.md`，确认本机仓库、二进制、conda 环境和文档偏差。
+1. 先读 `references/local-setup.md`，确认目标机器上的仓库、二进制、conda 环境和文档偏差。
 2. 判断任务属于 pure docking、similarity searching、hybrid 三类之一。
-3. 先检查 `build/udp` 是否可直接运行；如果不可运行，再切到本机 `unidock-pro` 环境，必要时按本地构建指引重建。
+3. 先检查 `build/udp` 是否可直接运行；如果不可运行，再切到 `unidock-pro` 环境，必要时按本地构建指引重建。
 4. 明确搜索框中心、搜索框尺寸和 `--search_mode`。`--search_mode` 必须显式设置，不允许省略；如果用户没有明确说用哪一个，每次都先问，不得替用户默认选择。
 5. 优先通过 `scripts/run_unidock_case.py` 执行，不要直接手写一长串 `udp` 参数。
 6. 如果用户只有配体目录，没有索引文件，先运行 `scripts/make_ligand_index.py`。
@@ -72,13 +72,13 @@ python3 scripts/analyze_unidock_results.py /path/to/results /path/to/docking_res
 
 ## 环境与构建
 
-本 skill 默认依赖这台机器上的本地安装事实，不要凭空假设新机器布局。
+本 skill 依赖目标机器上的 UniDock-Pro 安装事实，不要凭空假设新机器布局。
 
 - 先尝试直接运行 `/path/to/UniDock-Pro/build/udp`
 - 如果直接运行失败，再尝试 `conda activate unidock-pro`
 - 如果 `conda activate` 不方便，再回退到 `/path/to/conda-envs/unidock-pro`
 
-如果二进制不存在或不可执行，优先按 `references/local-setup.md` 中的本机构建步骤重建。
+如果二进制不存在或不可执行，优先按 `references/local-setup.md` 中的构建步骤重建。
 
 ## 防呆规则
 
@@ -102,7 +102,7 @@ python3 scripts/analyze_unidock_results.py /path/to/results /path/to/docking_res
 
 ## 资源
 
-- 本机路径、环境和文档偏差：`references/local-setup.md`
+- 本地路径、环境和文档偏差：`references/local-setup.md`
 - 三类任务的命令模板和输出约定：`references/workflows.md`
 - 统一运行入口：`scripts/run_unidock_case.py`
 - 配体目录转索引：`scripts/make_ligand_index.py`

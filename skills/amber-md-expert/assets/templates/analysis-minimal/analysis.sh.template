@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH -J __JOB_NAME__
-#SBATCH --partition=cpu6348
-#SBATCH --qos=52cores
+#SBATCH --partition=cpu
+#SBATCH --qos=normal
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4

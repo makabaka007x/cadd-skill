@@ -1,50 +1,54 @@
-# Auto CADD Skill Collection
+# CADD Skill Collection
 
 Chinese version: [README.zh-CN.md](README.zh-CN.md)
 
-This repository collects reusable Codex/Claude-style skills for CADD/AIDD work, including molecular dynamics, molecular docking, GPU virtual screening, protein design, and AlphaFold3 result analysis.
+This repository provides reusable Codex/Claude-style skills for CADD/AIDD work. It focuses on molecular docking, virtual screening, molecular dynamics, enhanced sampling, protein design, AlphaFold3 result analysis, and public chemical/biological database lookup.
 
-The repository is intended to be an agent skill manual and a portable skill bundle. The skills are not full software installers. They provide reusable instructions, helper scripts, templates, and safety checks that help an agent turn a scientific request into a reproducible workflow or run directory.
+The skills are agent instructions plus small helper scripts. They are not complete software installers. A skill-aware agent should read the relevant `SKILL.md`, inspect the user's local inputs, adapt paths and cluster settings, then run or package the workflow reproducibly.
 
-## Quick Skill Selector
+## Quick Selector
 
-Use this table when you know the research action but are not sure which skill to invoke.
-
-| You want to... | Use | Upstream method/tool | Ask the agent like this | Typical result |
-| --- | --- | --- | --- | --- |
-| Prepare or package an Amber MD system | `amber-md-expert` | [Amber](https://ambermd.org/) / [Amber-MD GitHub](https://github.com/amber-md) | `/amber-md-expert package this system for HPC Amber MD` | Amber run directory with inputs, submit scripts, analysis, and resume notes. |
-| Analyze Amber trajectories or binding energetics | `amber-md-expert` | [AmberTools](https://ambermd.org/AmberTools.php) / [Amber-MD GitHub](https://github.com/amber-md) | `/amber-md-expert analyze this trajectory and summarize RMSD, contacts, and MM/GBSA` | Trajectory metrics, tables, plots, and a bounded interpretation report. |
-| Run local HDOCK docking | `hdock` | [HDOCK official site](https://hdock.phys.hust.edu.cn/) | `/hdock run docking for these receptor and ligand PDB files` | `hdock.out`, exported complex models, copied inputs, logs, and run summary. |
-| Build or analyze a HADDOCK project | `haddock` | [HADDOCK site](https://www.bonvinlab.org/software/haddock2.4/) / [haddocking GitHub](https://github.com/haddocking) | `/haddock create a HADDOCK project with these structures and restraints` | HADDOCK project files, restraints, run outputs, cluster summaries, and ranked models. |
-| Screen a ligand library on GPU | `unidock-pro` | [Uni-Dock GitHub](https://github.com/dptech-corp/Uni-Dock) / [Uni-Dock2 GitHub](https://github.com/dptech-corp/Uni-Dock2) | `/unidock-pro screen this ligand library against this receptor and rank the top hits` | Ligand index, UniDock-Pro outputs, ranked CSV, and mode/search-box assumptions. |
-| Design proteins or binders with RFD3 | `rfdiffusion3` | [Foundry GitHub](https://github.com/RosettaCommons/foundry) / [RFD3 docs](https://rosettacommons.github.io/foundry/) | `/rfdiffusion3 design a binder for this target after checking chains and residues` | RFD3 design outputs, optional MPNN/RF3 post-processing configs, and QC notes. |
-| Rank or inspect AlphaFold3 predictions | `af-analysis` | [af_analysis GitHub](https://github.com/samuelmurail/af_analysis) / [docs](https://af-analysis.readthedocs.io/) | `/af-analysis rank these AF3 results and generate PAE/interface metrics` | Markdown/CSV rankings, ipTM_d0/pDockQ/mpDockQ metrics, PAE plots, and summaries. |
+| Task | Skill | Use when you need | Typical output |
+| --- | --- | --- | --- |
+| Amber MD setup or analysis | `amber-md-expert` | Amber/AmberTools, topology preparation, cpptraj, MM/GBSA, PBSA, restart checks | MD run directory, analysis scripts, plots, summary notes |
+| GROMACS conventional MD | `gmx-workflow-packer` | EM, NVT, NPT, production MD, GROMACS run packaging | Conventional MD bundle with `mdp/`, `run.sh`, `state.yaml`, analysis notes |
+| GROMACS tREMD/REST2 | `gmx-workflow-packer` | tREMD, REST2/HREX, PLUMED partial tempering, demux, exchange analysis | Replica run bundle, HREX preflight result, post-processing scripts |
+| Local HDOCK docking | `hdock` | Protein-protein or protein-nucleic-acid HDOCKlite cases | `hdock.out`, exported complex models, logs, run summary |
+| HADDOCK docking | `haddock` | Information-driven docking with active/passive residues, AIR restraints, HADDOCK projects | HADDOCK project files, restraints, cluster summaries, ranked models |
+| GPU virtual screening | `unidock-pro` | UniDock-Pro classical docking, similarity search, or hybrid docking | Ligand index, docking outputs, ranked CSV, mode/search-box notes |
+| RFdiffusion3 design | `rfdiffusion3` | Foundry/RFD3 binder, nucleic-acid binder, small-molecule binder, enzyme scaffold design | RFD3 inputs, smoke-test notes, design outputs, QC/post-processing templates |
+| AlphaFold3 result analysis | `af-analysis` | AF3 Server `fold_*.zip`, local AF3 outputs, PAE/interface metrics | Ranking tables, CSV/Markdown summaries, PAE plots, interface metrics |
+| PubChem lookup | `pubchem-pug-skill` | Compound properties, descriptions, assay summaries, substances | Compact PubChem summary or saved raw payload on request |
+| ChEMBL lookup | `chembl-skill` | Activities, molecules, targets, mechanisms, text search | Compact ChEMBL activity or target summary |
+| BindingDB lookup | `bindingdb-skill` | Ligand-target binding records by PDB, UniProt, or similarity | Compact binding evidence summary |
+| RCSB PDB lookup | `rcsb-pdb-skill` | PDB metadata, structure search, FASTA download | Structure metadata, chain/source summary |
+| UniProt lookup | `uniprot-skill` | UniProtKB, UniRef, UniParc, FASTA, annotations | Protein identity, sequence, functional annotation summary |
+| ChEBI lookup | `chebi-skill` | Chemical identity, ontology, structure metadata | Compact ChEBI compound/ontology summary |
 
 ## Repository Layout
 
 ```text
 skills/
-  amber-md-expert/
-  hdock/
-  haddock/
-  unidock-pro/
-  rfdiffusion3/
   af-analysis/
+  amber-md-expert/
+  bindingdb-skill/
+  chebi-skill/
+  chembl-skill/
+  gmx-workflow-packer/
+  haddock/
+  hdock/
+  pubchem-pug-skill/
+  rcsb-pdb-skill/
+  rfdiffusion3/
+  unidock-pro/
+  uniprot-skill/
 ```
 
-Each listed skill keeps its own `SKILL.md` plus optional `scripts/`, `references/`, `assets/`, `templates/`, or `agents/` files. Read the skill's `SKILL.md` first, then load only the specific referenced script or document needed for the task.
+Each skill keeps a required `SKILL.md` and may include `scripts/`, `references/`, `assets/`, or `agents/`. Read `SKILL.md` first, then load only the referenced files needed for the task.
 
-## Local Clone Tutorial
+## Install
 
-Use this section when you want a local editable copy of the repository before installing skills into Codex or Claude.
-
-1. Check that Git is available.
-
-```bash
-git --version
-```
-
-2. Choose a working directory and clone the repository.
+Clone the repository:
 
 ```bash
 mkdir -p ~/repos
@@ -53,222 +57,103 @@ git clone https://github.com/makabaka007x/cadd-skill.git
 cd cadd-skill
 ```
 
-3. Confirm that the skill directories exist.
+Install all skills into a Codex skill root:
 
 ```bash
-ls skills
-find skills -maxdepth 2 -name SKILL.md | sort
-```
-
-4. Pull future updates from GitHub.
-
-```bash
-cd ~/repos/cadd-skill
-git pull --ff-only
-```
-
-5. If you prefer SSH and your GitHub SSH key is already configured, clone with SSH instead.
-
-```bash
-git clone git@github.com:makabaka007x/cadd-skill.git
-```
-
-Use HTTPS for the simplest read-only setup. Use SSH when you plan to push changes back to the repository.
-
-## Install Into Agent Skill Roots
-
-Install all documented skills into a Codex skill root:
-
-```bash
-cd ~/repos/cadd-skill
 mkdir -p ~/.codex/skills
-for skill_name in amber-md-expert hdock haddock unidock-pro rfdiffusion3 af-analysis; do
-  rsync -a "skills/$skill_name" ~/.codex/skills/
+for skill_dir in skills/*; do
+  [ -f "$skill_dir/SKILL.md" ] && rsync -a "$skill_dir" ~/.codex/skills/
 done
 ```
 
 Install one skill only:
 
 ```bash
-cd ~/repos/cadd-skill
 mkdir -p ~/.codex/skills
-rsync -a skills/unidock-pro ~/.codex/skills/
+rsync -a skills/gmx-workflow-packer ~/.codex/skills/
 ```
 
-For Claude-style local skill roots, copy the same directories into the active Claude skill directory, for example:
+For a Claude-style local skill root, copy the same directories into the active Claude skill directory:
 
 ```bash
-cd ~/repos/cadd-skill
 mkdir -p ~/.claude/skills
 rsync -a skills/unidock-pro ~/.claude/skills/
 ```
 
-Validate a copied skill when a local validator is available:
+Validate the skill list:
 
 ```bash
-python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py ~/.codex/skills/unidock-pro
+find skills -maxdepth 2 -name SKILL.md | sort
 ```
 
-If the validator is not installed, at minimum confirm that the target skill directory contains a `SKILL.md` file with valid YAML frontmatter and no machine-specific private paths.
+If a local skill validator is available:
 
-## Detailed Skill Guide
+```bash
+python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py ~/.codex/skills/gmx-workflow-packer
+```
 
-The examples below are agent-facing invocation prompts. They are meant for Codex, Claude, or another skill-aware agent, not for a shell. The agent should read the corresponding `SKILL.md`, choose the proper helper scripts internally, and report what it ran.
+## Combined Workflow Examples
 
-### `amber-md-expert`
+These are prompts for a skill-aware agent, not shell commands.
 
-**Category:** Molecular dynamics and Amber workflow packaging.
+### Virtual Screening
 
-**What it does:** This skill turns Amber or AmberTools work into a reproducible local or HPC-ready workflow. It covers structure preparation, topology generation, explicit or implicit solvent MD, restart/resume logic, cpptraj analysis, MM/GBSA or PBSA, contact analysis, and upload-ready run directories.
+Use database skills to define the target and ligand set, then dock with UniDock-Pro:
 
-**Use when the request mentions:** Amber, AmberTools, pdb4amber, tleap, antechamber, parmchk2, pmemd, cpptraj, MMPBSA.py, PBSA, REMD, membrane systems, zinc or nonstandard residues, nucleic acids, DSSP, contact analysis, or packaging an MD job for a cluster.
+```text
+Use $uniprot-skill and $rcsb-pdb-skill to confirm the target identity, available structures, chain IDs, and co-crystal ligands. Then use $chembl-skill, $bindingdb-skill, and $pubchem-pug-skill to collect known ligands and activity evidence. Build a ligand library, run $unidock-pro classical docking against the prepared receptor, and return a ranked CSV with the assumptions for the search box and search_mode.
+```
 
-**Typical inputs:** raw PDB or complex structures, ligand files, existing `prmtop`/`inpcrd`/`rst7` files, trajectories, restart files, force-field decisions, run length requirements, and target cluster constraints.
+Follow-up after docking:
 
-**Common workflow:** classify the task as raw structure preparation, existing Amber topology packaging, or analysis-only; choose force fields and water model; generate or assemble the run directory; add upload and resume instructions; validate run scripts and time scales before treating the bundle as ready.
+```text
+Use $bindingdb-skill and $chembl-skill to annotate the top 50 UniDock-Pro hits with known target or analog evidence, then summarize which hits are novel versus already supported by binding data.
+```
 
-**Agent-style requests:**
+### Molecular Docking
 
-- `/amber-md-expert package this Amber system into an HPC-ready run directory`
-- `/amber-md-expert prepare an explicit-solvent Amber workflow for this protein-ligand complex`
-- `/amber-md-expert analyze this trajectory with cpptraj and summarize RMSD, RoG, contacts, and MM/GBSA`
-- `/amber-md-expert check whether this Amber restart chain can be safely resumed`
+Use sequence and structure lookup before docking:
 
-**Expected outputs:** a structured run directory, preparation files, MD input files, submit scripts, analysis scripts, restart/resume notes, and an `UPLOAD_AND_RUN.md` style instruction file when packaging for HPC.
+```text
+Use $uniprot-skill to confirm the protein sequence and domain boundaries, then use $rcsb-pdb-skill to identify suitable template structures. If this is protein-protein or protein-nucleic-acid docking, run $hdock and export the top models. If active/passive residues or AIR restraints are available, prepare a $haddock project and rank the resulting clusters.
+```
 
-**Important caveats:** force-field and water-model choices are scientific decisions, not generic defaults. Production time scales must be confirmed before final delivery. HPC partition, QOS, module, and wall-time policies must be adapted to the target cluster.
+For ligand identity checks:
 
-### `hdock`
+```text
+Use $pubchem-pug-skill and $chebi-skill to confirm the ligand identity, synonyms, charge-relevant metadata, and structure identifiers before preparing the docking inputs.
+```
 
-**Category:** Local HDOCKlite docking.
+### Molecular Dynamics
 
-**What it does:** This skill runs and packages reproducible HDOCKlite docking cases for protein-protein or protein-nucleic-acid systems. It can run `hdock`, export models with `createpl`, preserve logs, and create a summary for later inspection.
+Use structure/database skills first, then choose Amber or GROMACS:
 
-**Use when the request mentions:** HDOCK, HDOCKlite, `hdock`, `createpl`, receptor/ligand PDB files, `rsite.txt`, `lsite.txt`, `restr.txt`, binding-site restraints, or generating complex models from an existing `hdock.out`.
+```text
+Use $rcsb-pdb-skill and $uniprot-skill to verify the source structure, chain IDs, mutations, missing residues, and sequence coverage. Then use $amber-md-expert to prepare an Amber explicit-solvent MD package with restart checks and basic cpptraj analysis.
+```
 
-**Typical inputs:** receptor PDB, ligand PDB, optional site/restraint files, optional existing `hdock.out`, output directory, and number of models to export.
+For GROMACS conventional MD:
 
-**Common workflow:** verify receptor and ligand inputs; decide whether to run docking or only export models from an existing `.out`; let the agent call the appropriate wrapper internally; inspect logs and `run-summary.json`; report produced models and raw score output.
+```text
+Use $gmx-workflow-packer to build a conventional GROMACS MD bundle from this prepared topol.top and 1EM.gro. Generate EM/NVT/NPT/production MDP files, a resumable run.sh, state.yaml, UPLOAD_AND_RUN.md, and basic analysis notes.
+```
 
-**Agent-style requests:**
+For enhanced sampling:
 
-- `/hdock run docking for receptor.pdb and ligand.pdb, then export the top 20 models`
-- `/hdock use the provided rsite.txt and lsite.txt restraints for this docking case`
-- `/hdock generate complex models from this existing hdock.out`
-- `/hdock package this HDOCK case so the inputs, logs, scores, and models are easy to inspect`
+```text
+Use $gmx-workflow-packer to prepare a tREMD bundle for this GROMACS system, estimate or validate the temperature ladder, create step1/step2/run.sh, and include demux plus exchange-efficiency analysis scripts. If I ask for REST2, first check whether the target GROMACS/PLUMED module supports both -plumed and -hrex.
+```
 
-**Expected outputs:** `hdock.out`, `models.pdb`, copied inputs, stdout/stderr logs, and `run-summary.json`.
+### AF3-to-Design or MD Triage
 
-**Important caveats:** restraints should only be used when provided or scientifically justified. Raw docking scores are not biological validation.
+```text
+Use $af-analysis to rank these AlphaFold3 fold_*.zip files by ipTM_d0, pDockQ, mpDockQ, and PAE. For the best-supported interface, prepare either an $amber-md-expert or $gmx-workflow-packer MD package for stability checks, and keep all conclusions limited to prediction confidence until experimental or simulation evidence exists.
+```
 
-### `haddock`
+## Public-Use Notes
 
-**Category:** HADDOCK 2.5 information-driven docking.
-
-**What it does:** This skill helps create, run, and analyze HADDOCK 2.5 projects for protein-protein, protein-nucleic-acid, protein-ligand, peptide, and restraint-driven docking workflows.
-
-**Use when the request mentions:** HADDOCK, HADDOCK 2.5, AIR restraints, ambiguous interaction restraints, docking examples, project setup, CNS/HADDOCK environment checks, or analysis of HADDOCK clusters and scores.
-
-**Typical inputs:** molecule PDB files, active/passive residues, AIR or restraint files, HADDOCK parameter choices, project name, and the local HADDOCK installation path.
-
-**Common workflow:** check the HADDOCK environment; create or select a project; prepare restraints and parameters; run the appropriate example or custom project; analyze clusters, scores, FCC/iRMSD when available, and top models.
-
-**Agent-style requests:**
-
-- `/haddock create a protein-protein HADDOCK project from these two PDB files`
-- `/haddock prepare AIR restraints from these active and passive residues`
-- `/haddock run the protein-DNA example and summarize the output`
-- `/haddock analyze this HADDOCK run directory and rank the clusters`
-
-**Expected outputs:** HADDOCK run directories, parameter files, restraints, cluster summaries, score tables, and selected top models.
-
-**Important caveats:** HADDOCK is proprietary/local-install dependent. The public skill uses placeholder paths and cannot replace a configured licensed/local environment.
-
-### `unidock-pro`
-
-**Category:** GPU virtual screening.
-
-**What it does:** This skill runs UniDock-Pro workflows for classical docking, ligand similarity searching, and hybrid docking. It provides wrappers for ligand indexing, batch execution, and result ranking.
-
-**Use when the request mentions:** UniDock-Pro, `udp`, GPU virtual screening, `receptor.pdbqt`, `reference_ligand`, `ligand_index`, `ligand_dir`, `search_mode`, docking score ranking, or batch screening.
-
-**Typical inputs:** receptor PDBQT for docking/hybrid modes, reference ligand for similarity/hybrid modes, ligand directory or ligand index, search box center and size, explicit search mode, and output directory.
-
-**Common workflow:** identify the mode as docking, similarity, or hybrid; build a ligand index if only a ligand directory is provided; confirm search box and `search_mode`; let the agent run the internal wrapper; summarize `*_out.pdbqt` files into a ranked CSV.
-
-**Agent-style requests:**
-
-- `/unidock-pro run classical docking for this receptor and ligand library, then output the top 50 ranked ligands`
-- `/unidock-pro create a ligand index for this ligand directory`
-- `/unidock-pro run similarity searching using this reference ligand`
-- `/unidock-pro run hybrid docking with this receptor and co-crystal reference ligand`
-
-**Expected outputs:** UniDock-Pro output PDBQT files, logs, ranked CSV summaries, and a report of the actual mode and assumptions used.
-
-**Important caveats:** `search_mode` must be explicit. In hybrid mode, the reference ligand should match the receptor binding site and pose assumptions. Do not mix results from unrelated screening runs in one output directory.
-
-### `rfdiffusion3`
-
-**Category:** Protein design with Foundry/RFdiffusion3.
-
-**What it does:** This skill validates and runs RosettaCommons Foundry/RFdiffusion3 workflows. It covers environment checks, checkpoint paths, official demo smoke tests, design input preparation, and downstream post-processing templates.
-
-**Use when the request mentions:** RFdiffusion3, RFD3, Foundry, rc-foundry, RF3, ProteinMPNN, LigandMPNN, checkpoint downloads, binder design, nucleic-acid binders, small-molecule binders, enzyme scaffolds, partial diffusion, or RFD3 JSON/YAML design inputs.
-
-**Typical inputs:** a configured Foundry/RFD3 environment, checkpoint directory, target PDB/CIF, chain IDs, residue numbering, optional ligand names, design JSON/YAML, output directory, and GPU constraints.
-
-**Common workflow:** inspect the live environment; validate Python, torch/CUDA, Foundry CLIs, and checkpoints; run a small demo or smoke test before expensive GPU work; prepare design inputs from inspected structures; run low-memory first-pass settings when appropriate; post-process with MPNN/RF3/QC tools when requested.
-
-**Agent-style requests:**
-
-- `/rfdiffusion3 check whether this machine can run RFdiffusion3 with the available checkpoints`
-- `/rfdiffusion3 prepare a smoke test and explain whether the environment is ready`
-- `/rfdiffusion3 design a binder for this target structure after inspecting chain IDs and residue numbers`
-- `/rfdiffusion3 prepare MPNN and RF3 post-processing for these RFD3 designs`
-
-**Expected outputs:** RFD3 design outputs, optional trajectories, design metadata, MPNN/RF3 post-processing configs, and QC summaries.
-
-**Important caveats:** inspect chain IDs, residue numbers, and ligand residue names before writing design inputs. GPU memory and package-version differences can change which tutorial fields are valid.
-
-### `af-analysis`
-
-**Category:** AlphaFold3 output analysis.
-
-**What it does:** This skill analyzes AlphaFold3 Server zip files or local AF3 output directories with the `af-analysis` Python package. It focuses on ranking and interface quality metrics beyond basic ipTM.
-
-**Use when the request mentions:** AlphaFold3 Server `fold_*.zip`, local AF3 output folders, ipTM_d0, pDockQ, mpDockQ, LIS, PAE matrices, PPI quality ranking, or AF3 result comparison.
-
-**Typical inputs:** one or more `fold_*.zip` files, local AF3 output directories containing model structures and JSON files, output path, and desired table or figure format.
-
-**Common workflow:** run quick ranking across a directory; export Markdown or CSV; run deeper analysis for selected samples; inspect PAE and interface metrics; keep biological interpretation bounded by prediction confidence.
-
-**Agent-style requests:**
-
-- `/af-analysis rank all AlphaFold3 fold_*.zip files in this directory`
-- `/af-analysis analyze this AF3 result and generate PAE plots plus interface metrics`
-- `/af-analysis compare these AF3 models by ipTM_d0, pDockQ, mpDockQ, and PAE`
-- `/af-analysis export the ranking table as Markdown and CSV`
-
-**Expected outputs:** ranking tables, CSV/Markdown summaries, PAE heatmaps, analysis summaries, and optional notebook-style 3D visualization support.
-
-**Important caveats:** NGLView-based 3D visualization requires a Jupyter-compatible environment. AF3 confidence metrics support prioritization, not direct experimental proof.
-
-## Local Configuration Notes
-
-This public repository uses placeholder paths such as:
-
-- `/path/to/haddock2.5`
-- `/path/to/UniDock-Pro`
-- `/path/to/conda-envs/unidock-pro`
-- `/path/to/conda-envs/foundry-py312`
-- `/path/to/foundry/checkpoints`
-- `/path/to/foundry/workspace`
-
-Before running a workflow, edit the relevant `SKILL.md`, reference file, config file, or script argument to match the actual machine. Cluster partitions, QOS names, GPU limits, CPU limits, module names, and wall-time policies are examples only.
-
-## Public-Use and Safety Notes
-
-- Do not commit private home directories, WSL mount paths, cluster account names, tokens, API keys, passwords, or private key material.
-- Treat bundled scripts as workflow helpers, not full environment installers.
-- Run small validation or smoke tests before expensive docking, MD, screening, or protein-design jobs.
-- Keep scientific claims bounded by the actual method: docking scores, AF3 confidence metrics, and design outputs are prioritization evidence, not experimental validation.
+- Replace placeholder paths such as `/path/to/...`, `<cpu-partition>`, and `<gpu-qos>` with the target machine's actual settings.
+- Database skills return compact summaries by default. Save raw API payloads only when the user explicitly asks.
+- Do not commit private home directories, WSL mount paths, cluster account names, tokens, API keys, passwords, private keys, or unpublished project data.
+- Run small smoke tests before expensive docking, MD, screening, or protein-design jobs.
+- Treat docking scores, AF3 confidence metrics, and design outputs as prioritization evidence, not experimental validation.
